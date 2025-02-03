@@ -1,19 +1,36 @@
+# Intro
+
+```bash
+
+git clone
+cd tf020325
+terraform init
+terraform apply
+# enter "yes"
+# add ip address to 1pass so we can export it to local env via CLI cmd
+
+```
+
 # Server Setup & Docker Networking Guide
 
 ### Setting Up Environment Variables
 
 Export required variables from 1Password:
 
-- name: `id_ed25519_withpass_DO_TF_LINUX_SSH_KEY_DEB020325`
+- env var name: `TF_VAR_LINUX_SSH_KEY_DEB020325` (I name mine: id_ed25519_withpass_DO_TF_LINUX_SSH_KEY_DEB020325 both as its ssh key name & field name in 1pass)
   - SSH Key to add to DigitalOcean SSH keys collection
     - May also need to add it to github for dev user access on server
   - Not to be confused with `id_ed25519_nopass_CICD_SSH_KEY_DEB020325` -- which we might make for a CICD user (maybe even give it password)
+- env var name: `TF_VAR_LINUX_USER_DEVOPS_DEB020325` & `TF_VAR_LINUX_PASSWORD_DEVOPS_DEB020325`
+  - Setup as the first Linux username & pw, so you can ssh in.
+- env var name: `TF_VAR_LINUX_SSH_KEY_DEB020325` -- a public ssh key to add to DigitalOcean
+- env var name: `DIGITALOCEAN_ACCESS_TOKEN` - an access token you'll need to create on DigitalOcean
 
 ```bash
 # Export Terraform variables
 export DIGITALOCEAN_ACCESS_TOKEN=$(op item get "2025 Feb 020325 Debian project" --fields label=TF_VAR_DIGITAL_OCEAN_TOKEN_DEB020325) &&
 export TF_VAR_LINUX_USER_DEVOPS_DEB020325=$(op item get "2025 Feb 020325 Debian project" --fields label=LINUX_USER_DEVOPS_DEB020325) &&
-# export TF_VAR_LINUX_PASSWORD_DEVOPS_DEB020325=$(op item get "2025 Feb 020325 Debian project" --fields label=LINUX_PASSWORD_DEVOPS_DEB020325) &&
+export TF_VAR_LINUX_PASSWORD_DEVOPS_DEB020325=$(op item get "2025 Feb 020325 Debian project" --fields label=LINUX_PASSWORD_DEVOPS_DEB020325) &&
 export TF_VAR_LINUX_SSH_KEY_DEB020325=$(op item get "2025 Feb 020325 Debian project" --fields label=id_ed25519_withpass_DO_TF_LINUX_SSH_KEY_DEB020325) &&
 export TF_VAR_LINUX_SERVER_NAME_DEB020325=$(op item get "2025 Feb 020325 Debian project" --fields label=LINUX_SERVER_NAME_DEB020325)
 ```
@@ -155,7 +172,7 @@ sudo apt install rsync -y
 ```bash
 # for ssh login, I like to pull login & ip from 1pass:export TF_VAR_LINUX_USER_DEVOPS_DEB020325=$(op item get "2025 Feb 020325 Debian project" --fields label=LINUX_USER_DEVOPS_DEB020325) && \
 export TF_VAR_LINUX_USER_DEVOPS_DEB020325=$(op item get "2025 Feb 020325 Debian project" --fields label=LINUX_USER_DEVOPS_DEB020325) && \
-export LINUX_SERVER_IPADDRESS_DEB020325=$(op item get "2025 Feb 020325 Debian project" --fields label=LINUX_SERVER_IPADDRESS_DEB020325)=LINUX_SERVER_IPADDRESS_DEB020325)
+export LINUX_SERVER_IPADDRESS_DEB020325=$(op item get "2025 Feb 020325 Debian project" --fields label=LINUX_SERVER_IPADDRESS_DEB020325)
 
 # then ssh in:
 ssh "${TF_VAR_LINUX_USER_DEVOPS_DEB020325}"@"${LINUX_SERVER_IPADDRESS_DEB020325}"
