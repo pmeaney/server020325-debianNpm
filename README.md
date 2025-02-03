@@ -89,7 +89,7 @@ To configure SSL certificates and serve traffic to your applications:
 
 ## Deployment
 
-## ❗❗❗ See `npm020325/README.md` for more info on Nginx Proxy Manager setup
+See [NPM Project Readme](./npm020325/README.md) for more info on Nginx Proxy Manager setup
 
 ### Updating NPM Configuration
 
