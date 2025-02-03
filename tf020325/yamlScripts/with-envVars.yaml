@@ -4,20 +4,21 @@ groups:
 
 users:
   - default
-  - name: ${LINUX_USER_DEVOPS_012325}
-    gecos: ${LINUX_USER_DEVOPS_012325}
+  - name: ${LINUX_USER_DEVOPS_DEB020325}
+    gecos: ${LINUX_USER_DEVOPS_DEB020325}
     shell: /bin/bash
-    primary_group: ${LINUX_USER_DEVOPS_012325}
+    primary_group: ${LINUX_USER_DEVOPS_DEB020325}
     sudo: ALL=(ALL) NOPASSWD:ALL
     groups: users, admin, docker
     lock_passwd: false
-    ssh_authorized_keys: ${LINUX_SSH_KEY_012325}
+    ssh_authorized_keys: ${LINUX_SSH_KEY_DEB020325}
 
+# This creates our initial user
 chpasswd:
   expire: false
   users:
-    - name: ${LINUX_USER_DEVOPS_012325}
-      password: ${LINUX_PASSWORD_DEVOPS_012325}
+    - name: ${LINUX_USER_DEVOPS_DEB020325}
+      password: ${LINUX_PASSWORD_DEVOPS_DEB020325}
       type: text
 
 package_update: true
@@ -34,6 +35,6 @@ runcmd:
   # Install Docker using the official script
   - curl -fsSL https://get.docker.com -o get-docker.sh
   - sh get-docker.sh
-  - sudo usermod -aG docker ${LINUX_USER_DEVOPS_012325}
+  - sudo usermod -aG docker ${LINUX_USER_DEVOPS_DEB020325}
   # Install rsync with error handling
   - sudo apt-get install -y rsync || echo "Failed to install rsync"

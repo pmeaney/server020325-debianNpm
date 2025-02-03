@@ -4,12 +4,17 @@
 
 Export required variables from 1Password:
 
+- name: `id_ed25519_withpass_DO_TF_LINUX_SSH_KEY_DEB020325`
+  - SSH Key to add to DigitalOcean SSH keys collection
+    - May also need to add it to github for dev user access on server
+  - Not to be confused with `id_ed25519_nopass_CICD_SSH_KEY_DEB020325` -- which we might make for a CICD user (maybe even give it password)
+
 ```bash
 # Export Terraform variables
 export DIGITALOCEAN_ACCESS_TOKEN=$(op item get "2025 Feb 020325 Debian project" --fields label=TF_VAR_DIGITAL_OCEAN_TOKEN_DEB020325) &&
-export TF_VAR_LINUX_PASSWORD_DEVOPS_DEB020325=$(op item get "2025 Feb 020325 Debian project" --fields label=LINUX_PASSWORD_DEVOPS_DEB020325) &&
 export TF_VAR_LINUX_USER_DEVOPS_DEB020325=$(op item get "2025 Feb 020325 Debian project" --fields label=LINUX_USER_DEVOPS_DEB020325) &&
-export TF_VAR_LINUX_SSH_KEY_DEB020325=$(op item get "2025 Feb 020325 Debian project" --fields label=id_ed25519_nopass_LINUX_SSH_KEY_DEB020325) &&
+# export TF_VAR_LINUX_PASSWORD_DEVOPS_DEB020325=$(op item get "2025 Feb 020325 Debian project" --fields label=LINUX_PASSWORD_DEVOPS_DEB020325) &&
+export TF_VAR_LINUX_SSH_KEY_DEB020325=$(op item get "2025 Feb 020325 Debian project" --fields label=id_ed25519_withpass_DO_TF_LINUX_SSH_KEY_DEB020325) &&
 export TF_VAR_LINUX_SERVER_NAME_DEB020325=$(op item get "2025 Feb 020325 Debian project" --fields label=LINUX_SERVER_NAME_DEB020325)
 ```
 
