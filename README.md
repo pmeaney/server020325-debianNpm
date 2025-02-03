@@ -100,8 +100,6 @@ rsync -avvz ./npm020325/ "${TF_VAR_LINUX_USERNAME_DEVOPS_HUMAN_DEB020325}"@"${LI
 
 ```
 
-# Resources & Refe
-
 ## Basic Nginx Proxy Manager Deployment via rsync
 
 Deploy the newest Nginx Proxy Manager config update via rsync instead of git project cloning:
