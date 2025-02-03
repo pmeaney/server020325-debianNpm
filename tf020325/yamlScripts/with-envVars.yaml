@@ -1,0 +1,39 @@
+#cloud-config
+groups:
+  - debian: [root, sys]
+
+users:
+  - default
+  - name: ${LINUX_USER_DEVOPS_012325}
+    gecos: ${LINUX_USER_DEVOPS_012325}
+    shell: /bin/bash
+    primary_group: ${LINUX_USER_DEVOPS_012325}
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: users, admin, docker
+    lock_passwd: false
+    ssh_authorized_keys: ${LINUX_SSH_KEY_012325}
+
+chpasswd:
+  expire: false
+  users:
+    - name: ${LINUX_USER_DEVOPS_012325}
+      password: ${LINUX_PASSWORD_DEVOPS_012325}
+      type: text
+
+package_update: true
+package_upgrade: true
+packages:
+  - zsh
+  - git
+  - make
+  - rsync
+
+runcmd:
+  # Update package lists before installing anything
+  - sudo apt-get update
+  # Install Docker using the official script
+  - curl -fsSL https://get.docker.com -o get-docker.sh
+  - sh get-docker.sh
+  - sudo usermod -aG docker ${LINUX_USER_DEVOPS_012325}
+  # Install rsync with error handling
+  - sudo apt-get install -y rsync || echo "Failed to install rsync"
