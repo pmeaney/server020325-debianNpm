@@ -49,41 +49,42 @@ locals {
 
 provider "digitalocean" {}
 
-# the SERVER_NAME is not as important to set via env var... but we will go ahead and do it
-variable "LINUX_SERVER_NAME_DEB020325" {
+###############################################
+### Env vars Section -- Human users
+variable "LINUX_HUMAN_SSH_KEY_PUB_WITHPASS_DEB020325" {
   type = string
-  description = "environment variable for devops user"
-  default = "blahServerName"
+  description = "environment variable for Human Developers devops ssh key"
+  default = "blahSshKey"
 }
-
 variable "LINUX_USERNAME_DEVOPS_HUMAN_DEB020325" {
   type = string
   description = "environment variable for devops user"
   default = "blahLinuxUser"
 }
-
-variable "LINUX_USERNAME_GHA_CICD_BOT_DEB020325" {
-  type = string
-  description = "environment variable for github actions cicd bot user (so it can login to run tasks)"
-  default = "blahLinuxUser"
-}
-
 variable "LINUX_USERPASSWORD_DEVOPS_HUMAN_DEB020325" {
   type = string
   description = "environment variable for devops users password"
   default = "blahLinuxUserPassword"
 }
 
-variable "LINUX_HUMAN_SSH_KEY_PUB_WITHPASS_DEB020325" {
+### Env vars Section -- GHA Cicd bot
+
+variable "LINUX_USERNAME_GHA_CICD_BOT_DEB020325" {
   type = string
-  description = "environment variable for Human Developers devops ssh key"
+  description = "environment variable for github actions cicd bot user (so it can login to run tasks)"
+  default = "blahLinuxUser"
+}
+variable "LINUX_GHACICD_BOT_SSH_KEY_PUB_NOPASS_DEB020325" {
+  type = string
+  description = "eLINUX_HUMAN_SSH_KEY_PUB_WITHPASS_DEB020325nvironment variable for CICD Runner bots devops ssh key"
   default = "blahSshKey"
 }
 
-variable "LINUX_GHACICD_BOT_SSH_KEY_PUB_NOPASS_DEB020325" {
+# the SERVER_NAME is not as important to set via env var... but we will go ahead and do it
+variable "LINUX_SERVER_NAME_DEB020325" {
   type = string
-  description = "environment variable for CICD Runner bots devops ssh key"
-  default = "blahSshKey"
+  description = "environment variable for devops user"
+  default = "blahServerName"
 }
 
 data "template_file" "my_example_user_data" {
@@ -114,37 +115,32 @@ output "ip_address" {
   value       = digitalocean_droplet.droplet.ipv4_address
   description = "The public IP address of your droplet."
 }
-
 output "droplet_size" {
   value       = digitalocean_droplet.droplet.size
   description = "The public IP address of your droplet."
 }
-
 output "tf_apply_timestamp" {
   value       = timestamp()
   description = "Timestamp of apply"
 }
+output "LINUX_HUMAN_SSH_KEY_PUB_WITHPASS_DEB020325" {
+  value = "${var.LINUX_HUMAN_SSH_KEY_PUB_WITHPASS_DEB020325}"
+}
+output "LINUX_USERNAME_DEVOPS_HUMAN_DEB020325" {
+  value = "${var.LINUX_USERNAME_DEVOPS_HUMAN_DEB020325}"
+}
+output "LINUX_GHACICD_BOT_SSH_KEY_PUB_NOPASS_DEB020325" {
+  value = "${var.LINUX_GHACICD_BOT_SSH_KEY_PUB_NOPASS_DEB020325}"
+}
+output "LINUX_USERNAME_GHA_CICD_BOT_DEB020325" {
+  value = "${var.LINUX_USERNAME_GHA_CICD_BOT_DEB020325}"
+}
+output "LINUX_SERVER_NAME_DEB020325" {
+  value = "${var.LINUX_SERVER_NAME_DEB020325}"
+}
+
 
 # If you want to make sure the yaml file was properly filled with env vars, you can uncomment this output statement and terraform will show the env vars in situ
 # output "template_file_contents" {
 #   value = data.template_file.my_example_user_data.rendered
 # }
-
-output "LINUX_SERVER_NAME_DEB020325" {
-  value = "${var.LINUX_SERVER_NAME_DEB020325}"
-}
-
-output "LINUX_USERNAME_DEVOPS_HUMAN_DEB020325" {
-  value = "${var.LINUX_USERNAME_DEVOPS_HUMAN_DEB020325}"
-}
-output "LINUX_USERNAME_GHA_CICD_BOT_DEB020325" {
-  value = "${var.LINUX_USERNAME_GHA_CICD_BOT_DEB020325}"
-}
-
-output "LINUX_HUMAN_SSH_KEY_PUB_WITHPASS_DEB020325" {
-  value = "${var.LINUX_HUMAN_SSH_KEY_PUB_WITHPASS_DEB020325}"
-}
-
-output "LINUX_GHACICD_BOT_SSH_KEY_PUB_NOPASS_DEB020325" {
-  value = "${var.LINUX_GHACICD_BOT_SSH_KEY_PUB_NOPASS_DEB020325}"
-}
