@@ -17,22 +17,14 @@ terraform apply
 
 Export required variables from 1Password:
 
-- env var name: `TF_VAR_LINUX_SSH_KEY_DEB020325` (I name mine: id_ed25519_withpass_DO_TF_LINUX_SSH_KEY_DEB020325 both as its ssh key name & field name in 1pass)
-  - SSH Key to add to DigitalOcean SSH keys collection
-    - May also need to add it to github for dev user access on server
-  - Not to be confused with `id_ed25519_nopass_CICD_SSH_KEY_DEB020325` -- which we might make for a CICD user (maybe even give it password)
-- env var name: `TF_VAR_LINUX_USER_DEVOPS_DEB020325` & `TF_VAR_LINUX_PASSWORD_DEVOPS_DEB020325`
-  - Setup as the first Linux username & pw, so you can ssh in.
-- env var name: `TF_VAR_LINUX_SSH_KEY_DEB020325` -- a public ssh key to add to DigitalOcean
-- env var name: `DIGITALOCEAN_ACCESS_TOKEN` - an access token you'll need to create on DigitalOcean
-
 ```bash
 # Export Terraform variables
 export DIGITALOCEAN_ACCESS_TOKEN=$(op item get "2025 Feb 020325 Debian project" --fields label=TF_VAR_DIGITAL_OCEAN_TOKEN_DEB020325) &&
 export TF_VAR_LINUX_USER_DEVOPS_DEB020325=$(op item get "2025 Feb 020325 Debian project" --fields label=LINUX_USER_DEVOPS_DEB020325) &&
 export TF_VAR_LINUX_PASSWORD_DEVOPS_DEB020325=$(op item get "2025 Feb 020325 Debian project" --fields label=LINUX_PASSWORD_DEVOPS_DEB020325) &&
-export TF_VAR_LINUX_SSH_KEY_DEB020325=$(op item get "2025 Feb 020325 Debian project" --fields label=id_ed25519_withpass_DO_TF_LINUX_SSH_KEY_DEB020325) &&
-export TF_VAR_LINUX_SERVER_NAME_DEB020325=$(op item get "2025 Feb 020325 Debian project" --fields label=LINUX_SERVER_NAME_DEB020325)
+export TF_VAR_LINUX_SERVER_NAME_DEB020325=$(op item get "2025 Feb 020325 Debian project" --fields label=LINUX_SERVER_NAME_DEB020325) &&
+export TF_VAR_LINUX_HUMAN_SSH_KEY_PUB_WITHPASS_DEB020325=$(op item get "2025 Feb 020325 Debian project" --fields label=id_ed25519_withpass_DO_TF_HUMAN_SSH_KEY_DEB020325)
+export TF_VAR_LINUX_GHACICD_BOT_SSH_KEY_PUB_NOPASS_DEB020325=$(op item get "2025 Feb 020325 Debian project" --fields label=id_ed25519_nopass_GHACICD_BOT_SSH_KEY_DEB020325)
 ```
 
 ## Nginx Proxy Manager Configuration
@@ -175,8 +167,37 @@ export TF_VAR_LINUX_USER_DEVOPS_DEB020325=$(op item get "2025 Feb 020325 Debian 
 export LINUX_SERVER_IPADDRESS_DEB020325=$(op item get "2025 Feb 020325 Debian project" --fields label=LINUX_SERVER_IPADDRESS_DEB020325)
 
 # then ssh in:
+# ssh-add ~/.ssh/<privKeyName>
 ssh "${TF_VAR_LINUX_USER_DEVOPS_DEB020325}"@"${LINUX_SERVER_IPADDRESS_DEB020325}"
 
 # and maybe view the cloud-init logs to see how everything booted & make sure cloud init installed what it's supposed to (see bottom of ./terraform-server--Debian-Jan2025-PortfolioEtc/yamlScripts/with-envVars.yaml file)
 sudo cat /var/log/cloud-init-output.log
 ```
+
+# More info on env vars
+
+Exported env vars must be prefixed with `TF_VAR_` to be picked up by Terraform.
+
+We'll have the following items in our OS Env so Terraform can access them:
+
+| Environment Variable                                  | Notes                                                                                                                     | Example Value                                                                                                                                |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| TF_VAR_LINUX_HUMAN_SSH_KEY_PUB_WITHPASS_DEB0203255    | Pub ssh key for human dev user. Used during ssh login                                                                     | [More Info](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) |
+| TF_VAR_LINUX_USERNAME_DEVOPS_HUMAN_DEB020325          | Username to setup as Server's first user. You'll use it during ssh login                                                  | bobDev                                                                                                                                       |
+| TF_VAR_LINUX_USERPASSWORD_DEVOPS_HUMAN_DEB020325      | User's password to setup for Server's first user. You'll use it during ssh login                                          |                                                                                                                                              |
+| TF_VAR_LINUX_USERNAME_GHA_CICD_BOT_DEB020325          | Username for CICD Bot to use. The server is setup with this as a user, so a CICD Runner bot can ssh in to deploy projects | githubCICDBotUser                                                                                                                            |
+| TF_VAR_LINUX_GHACICD_BOT_SSH_KEY_PUB_NOPASS_DEB020325 | Pub ssh key for Github CICD Bot user                                                                                      | [More Info](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) |
+| TF_VAR_LINUX_SERVER_NAME_DEB020325                    | Used by DigitalOcean to give the server a name. Shows up in DO Dashboard                                                  | server020325-debianNpm                                                                                                                       |
+
+- env var name: `TF_VAR_LINUX_HUMAN_SSH_KEY_PUB_WITHPASS_DEB0203255` (I name mine: id_ed25519_withpass_DO_TF_LINUX_SSH_KEY_DEB020325 both as its ssh key name & field name in 1pass)
+
+  - SSH Key to add to DigitalOcean SSH keys collection
+    - May also need to add it to github for dev user access on server
+
+- ${LINUX_HUMAN_SSH_KEY_PUB_WITHPASS_DEB020325} # Dev key
+- ${LINUX_GHACICD_BOT_SSH_KEY_PUB_NOPASS_DEB020325} # CI/CD key
+-
+- env var name: `TF_VAR_LINUX_USER_DEVOPS_DEB020325` & `TF_VAR_LINUX_PASSWORD_DEVOPS_DEB020325`
+  - Setup as the first Linux username & pw, so you can ssh in.
+- env var name: `TF_VAR_LINUX_SSH_KEY_DEB020325` -- a public ssh key to add to DigitalOcean
+- env var name: `DIGITALOCEAN_ACCESS_TOKEN` - an access token you'll need to create on DigitalOcean

@@ -4,21 +4,32 @@ groups:
 
 users:
   - default
-  - name: ${LINUX_USER_DEVOPS_DEB020325}
-    gecos: ${LINUX_USER_DEVOPS_DEB020325}
+  - name: ${LINUX_USERNAME_DEVOPS_HUMAN_DEB020325}
+    gecos: Developer Access Account - ${LINUX_USERNAME_DEVOPS_HUMAN_DEB020325}
     shell: /bin/bash
-    primary_group: ${LINUX_USER_DEVOPS_DEB020325}
+    primary_group: ${LINUX_USERNAME_DEVOPS_HUMAN_DEB020325}
     sudo: ALL=(ALL) NOPASSWD:ALL
     groups: users, admin, docker
     lock_passwd: false
-    ssh_authorized_keys: ${LINUX_SSH_KEY_DEB020325}
+    ssh_authorized_keys:
+      - ${LINUX_HUMAN_SSH_KEY_PUB_WITHPASS_DEB020325}
+
+  - name: ${TF_VAR_LINUX_USERNAME_GHA_CICD_BOT_DEB020325}
+    gecos: GitHub Actions CI/CD Bot - ${TF_VAR_LINUX_USERNAME_GHA_CICD_BOT_DEB020325}
+    shell: /bin/bash
+    primary_group: ${TF_VAR_LINUX_USERNAME_GHA_CICD_BOT_DEB020325}
+    sudo: ALL=(ALL) NOPASSWD:/usr/bin/docker,/usr/bin/docker-compose
+    groups: docker
+    lock_passwd: true
+    ssh_authorized_keys:
+      - ${LINUX_GHACICD_BOT_SSH_KEY_PUB_NOPASS_DEB020325}
 
 # This creates our initial user
 chpasswd:
   expire: false
   users:
-    - name: ${LINUX_USER_DEVOPS_DEB020325}
-      password: ${LINUX_PASSWORD_DEVOPS_DEB020325}
+    - name: ${LINUX_USERNAME_DEVOPS_HUMAN_DEB020325}
+      password: ${LINUX_USERPASSWORD_DEVOPS_HUMAN_DEB020325}
       type: text
 
 package_update: true
@@ -35,6 +46,6 @@ runcmd:
   # Install Docker using the official script
   - curl -fsSL https://get.docker.com -o get-docker.sh
   - sh get-docker.sh
-  - sudo usermod -aG docker ${LINUX_USER_DEVOPS_DEB020325}
+  - sudo usermod -aG docker ${LINUX_USERNAME_DEVOPS_HUMAN_DEB020325}
   # Install rsync with error handling
   - sudo apt-get install -y rsync || echo "Failed to install rsync"
