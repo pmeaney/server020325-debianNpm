@@ -1,5 +1,9 @@
 # The purpose of this script is to allow a developer to quickly:
-# - run through the process of SSH key setup, plus adding public ssh key to DigitalOcean, Github, & storing it in 1password
+# - run through the process of SSH key setup, 
+# - adding public ssh key to DigitalOcean, Github, & storing it in 1password
+# - So that we can then create a new server via Terraform... and pass it the public key, which it usees to verify ssh connections.
+# For example, for your Human Dev User ssh in, and for your CICD Bot to ssh in.
+
 # Note: files can't yet be CLI auto-uploaded to 1pass, so I typically upload my ssh private key after running this script.
 
 ########## Project Abbreviations   ##########
