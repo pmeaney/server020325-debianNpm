@@ -1,7 +1,5 @@
-
 # The purpose of this script is to allow a developer to quickly:
 # - run through the process of SSH key setup for use with the terraform project (2 keys-- human dev and cicd bot)
-
 
 # Keeping it relatively manual, because it might need tweaking
 get_timestamp_suffix() {
@@ -12,15 +10,17 @@ EMAIL=patrick.wm.meaney@gmail.com
 SSH_KEY_ENCTYPE=id_ed25519
 SSH_KEY_NAME=nopass_GENERAL_HUMANDEV_USE
 SSH_KEY_NAME_WITH_DATE=${SSH_KEY_NAME}_$(get_timestamp_suffix)
-SSH_KEY_FULL_FILENAME=${SSH_KEY_ENCTYPE}_{SSH_KEY_NAME_WITH_DATE}
-SSH_KEY_FILE_PATH=~/.ssh/${SSH_KEY_FULL_FILENAME}
+SSH_KEY_FULL_FILENAME=${SSH_KEY_ENCTYPE}_${SSH_KEY_NAME_WITH_DATE}
+SSH_KEY_FILE_CREATION_PATH=~/.ssh/${SSH_KEY_FULL_FILENAME}
+SSH_KEY_FILE_PUBKEY_PATH=~/.ssh/${SSH_KEY_FULL_FILENAME}.pub
 DATE=$(get_timestamp_suffix)
 
 echo "Log into Github CLI tool so we can upload to it the upcoming ssh key we create"
 
-echo "Creating an ssh key with script variable: " ${SSH_KEY_FULL_FILENAME}
-ssh-keygen -t ed25519 -C "${EMAIL}" -f ${SSH_KEY_FILE_PATH}
-ssh-add ${SSH_KEY_FILE_PATH}
+echo "Creating an ssh key: " ${SSH_KEY_FULL_FILENAME}
+ssh-keygen -t ed25519 -C "${EMAIL}" -f ${SSH_KEY_FILE_CREATION_PATH}
+echo "Adding private ssh key to ssh agent - " ${SSH_KEY_FILE_CREATION_PATH}
+ssh-add ${SSH_KEY_FILE_CREATION_PATH}
 
 echo "Adding keys to ssh config file"
 cat << EOF >> ~/.ssh/config
@@ -30,14 +30,23 @@ Host github.com
     HostName ssh.github.com
     User git
     Port 443
-    IdentityFile ${SSH_KEY_FILE_PATH}
+    IdentityFile ${SSH_KEY_FILE_CREATION_PATH}
 EOF
 
 echo "Uploading ssh public key to DigitalOcean via DO CLI"
-doctl compute ssh-key create DO_TF_HUMAN_SSH_KEY_DEB020325 --public-key "$(cat ~/.ssh/id_ed25519_withpass_DO_TF_HUMAN_SSH_KEY_DEB020325.pub)"
+doctl compute ssh-key create ${SSH_KEY_NAME_WITH_DATE} --public-key "$(cat ${SSH_KEY_FILE_PUBKEY_PATH})"
 
 echo "Uploading ssh public key to Github"
-gh ssh-key add ~/.ssh/id_ed25519_withpass_DO_TF_HUMAN_SSH_KEY_DEB020325.pub -t "DO_TF_HUMAN_SSH_KEY_DEB020325"
+gh ssh-key add ${SSH_KEY_FILE_PUBKEY_PATH} -t "${SSH_KEY_NAME_WITH_DATE}"
+
+
+
+
+
+
+
+
+
 
 
 #############E
