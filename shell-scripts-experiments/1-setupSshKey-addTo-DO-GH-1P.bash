@@ -7,11 +7,10 @@
 ## DO = DigitalOcean                       ##
 #############################################
 
-#### Section: Editable variables: 
-# Make sure these are right for your use case.
+#### Section: Editable variables.
+## Thes are Required to be set correctly, so Make sure these are right for your use case.
 EMAIL=patrick.wm.meaney@gmail.com
-SSH_KEY_NAME=nopass_GENERAL_TEST_KEY
-
+SSH_KEY_NAME=nopass_GENERAL_TEST_KEY_BLAHHH
 # 1PASSWORD -- Set your Vault, Item (e.g. name of a SecureNote), and Field names here
 VAULT_1P=Z_Tech_ClicksAndCodes
 ITEM_1P="2025 Feb 020325 Debian project"
@@ -23,6 +22,7 @@ FIELD_1P_DO_TOKEN=DO_TOKEN_ALL_PERMISSIONS_020325
 # Go here: [Github ssh keys dashboard](https://github.com/settings/keys)
 FIELD_1P_GH_TOKEN=GH_PAT_repo_read-org_admin-publickey
 
+#############################################
 #### Section: Other variables
 SSH_KEY_ENCTYPE=id_ed25519
 SSH_KEY_NAME_WITH_DATE=${SSH_KEY_NAME}_$(get_timestamp_suffix)
@@ -30,13 +30,13 @@ SSH_KEY_FULL_FILENAME=${SSH_KEY_ENCTYPE}_${SSH_KEY_NAME_WITH_DATE}
 SSH_KEY_FILE_CREATION_PATH=~/.ssh/${SSH_KEY_FULL_FILENAME}
 SSH_KEY_FILE_PUBKEY_PATH=~/.ssh/${SSH_KEY_FULL_FILENAME}.pub
 SSH_KEY_PUBKEY_FILENAME=${SSH_KEY_FULL_FILENAME}.pub
-DATE=$(get_timestamp_suffix)
 
 #### Section: Functions
 get_timestamp_suffix() {
   # format the current date as MMDDYY -- e.g. 020425
     date +%m%d%y
 }
+DATE=$(get_timestamp_suffix)
 
 get_1password_field() {
     local vault="$1"
@@ -49,11 +49,29 @@ get_1password_field() {
         --field "${field}"
 }
 
+
+#### Section: Main Script
+echo " "
+echo " "
+echo " "
+echo "#############################################"
+echo "#############################################"
+echo " "
+echo "### This script assumes you created the 1Password Vault " ${VAULT_1P} " and Item (category: SecureNote) " ${ITEM_1P}
+echo "### And that it contains the DO Token and GH Token referenced at the top of the script
+echo "### These tokens will be used to log you into the DO and GH CLI Tools
+echo " "
+echo "#############################################"
+echo "#############################################"
+echo " "
+echo " "
+echo " "
+
 echo "Logging into Github CLI tool with GH PAT Token so we can upload to GH the upcoming ssh key we create"
-echo "$(get_1password_field "${VAULT_1PASSWORD}" "${ITEM_1PASSWORD}" "${FIELD_1PASSWORD_GH_TOKEN}")" | gh auth login --with-token
+echo "$(get_1password_field "${VAULT_1P}" "${ITEM_1P}" "${FIELD_1P_GH_TOKEN}")" | gh auth login --with-token
 
 echo "Logging into DigitalOcean CLI Tool with DO Token so we can upload to DO the upcoming ssh key we create"
-doctl auth init --context default --access-token "$(get_1password_field "${VAULT_1PASSWORD}" "${ITEM_1PASSWORD}" "${FIELD_1PASSWORD_DO_TOKEN}")"
+doctl auth init --context default --access-token "$(get_1password_field "${VAULT_1P}" "${ITEM_1P}" "${FIELD_1P_DO_TOKEN}")"
 
 echo "Creating an ssh key: " ${SSH_KEY_FULL_FILENAME}
 ssh-keygen -t ed25519 -C "${EMAIL}" -f ${SSH_KEY_FILE_CREATION_PATH}
@@ -78,22 +96,7 @@ doctl compute ssh-key create ${SSH_KEY_NAME_WITH_DATE} --public-key "$(cat ${SSH
 echo "Uploading ssh public key to Github via GH CLI"
 gh ssh-key add ${SSH_KEY_FILE_PUBKEY_PATH} -t "${SSH_KEY_NAME_WITH_DATE}"
 
-# Check if the item exists in the vault
-if op item get "$ITEM_TITLE" --vault "$VAULT" &>/dev/null; then
-    echo "Item '$ITEM_TITLE' exists in vault '$VAULT'. Public keys will be updated."
+## 1Password Integration Section
 
-    # Update existing item with just the public keys
-    op item edit "$ITEM_TITLE" --vault "$VAULT" \
-        "id_ed25519_nopass_GHACICD_BOT_PUB_SSH_KEY_DEB020325[text]=$(cat ~/.ssh/id_ed25519_nopass_GHACICD_BOT_SSH_KEY_DEB020325.pub)" \
-        "id_ed25519_withpass_DO_TF_HUMAN_PUB_SSH_KEY_DEB020325[text]=$(cat ~/.ssh/id_ed25519_withpass_DO_TF_HUMAN_SSH_KEY_DEB020325.pub)"
-else
-    echo "Item '$ITEM_TITLE' does not exist in vault '$VAULT'. Creating new item with public keys."
-
-    # Create new item with just the public keys
-    op item create --vault "$VAULT" \
-        --title "$ITEM_TITLE" \
-        "id_ed25519_nopass_GHACICD_BOT_PUB_SSH_KEY_DEB020325[text]=$(cat ~/.ssh/id_ed25519_nopass_GHACICD_BOT_SSH_KEY_DEB020325.pub)" \
-        "id_ed25519_withpass_DO_TF_HUMAN_PUB_SSH_KEY_DEB020325[text]=$(cat ~/.ssh/id_ed25519_withpass_DO_TF_HUMAN_SSH_KEY_DEB020325.pub)"
-fi
-
-echo "Done: Setup new ssh key, uploaded it to DO, GH, 1P"
+op item edit "${ITEM_1P}" --vault "${VAULT_1P}" \
+    "${SSH_KEY_PUBKEY_FILENAME}[text]=$(cat ${SSH_KEY_FILE_PUBKEY_PATH})" \
