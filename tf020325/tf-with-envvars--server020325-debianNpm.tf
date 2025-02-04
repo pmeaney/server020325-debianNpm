@@ -139,12 +139,10 @@ output "LINUX_SERVER_NAME" {
   value = "${var.LINUX_SERVER_NAME}"
 }
 
-
 # If you want to make sure the yaml file was properly filled with env vars, you can uncomment this output statement and terraform will show the env vars in situ
 # output "template_file_contents" {
 #   value = data.template_file.my_example_user_data.rendered
 # }
-
 
 variable "VAULT_1P" {
   type = string
@@ -162,7 +160,7 @@ variable "ITEM_1P" {
 resource "null_resource" "store_ip_1password" {
   provisioner "local-exec" {
     command = <<-EOT
-      op item edit "$TF_VAR_ITEM_1P" --vault "$TF_VAR_VAULT_1P" "LINUX_SERVER_IP[text]=${digitalocean_droplet.droplet.ipv4_address}"
+      op item edit "$TF_VAR_ITEM_1P" --vault "$TF_VAR_VAULT_1P" "LINUX_SERVER_IPADDRESS[text]=${digitalocean_droplet.droplet.ipv4_address}"
     EOT
   }
 
