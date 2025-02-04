@@ -17,10 +17,10 @@ ssh-add ~/.ssh/id_ed25519_devops_DEB020325
 
 ```bash
 # Generate SSH key without password for automation
-ssh-keygen -t ed25519 -C "cicd-bot@example.com" -f ~/.ssh/id_ed25519_cicdbot_DEB020325 -N ""
+ssh-keygen -t ed25519 -C "cicd-bot@example.com" -f ~/.ssh/id_ed25519_nopass_GHACICD_BOT_SSH_KEY_DEB020325 -N ""
 
 # Add to SSH agent
-ssh-add ~/.ssh/id_ed25519_cicdbot_DEB020325
+ssh-add ~/.ssh/id_ed25519_nopass_GHACICD_BOT_SSH_KEY_DEB020325
 ```
 
 ## 2. Configure SSH Config File
@@ -40,32 +40,75 @@ Host do-portfolio-feb2025
 Host do-portfolio-feb2025-cicd
     HostName [Your-DO-Droplet-IP]
     User ${TF_VAR_LINUX_USERNAME_GHA_CICD_BOT_DEB020325}
-    IdentityFile ~/.ssh/id_ed25519_cicdbot_DEB020325
+    IdentityFile ~/.ssh/id_ed25519_nopass_GHACICD_BOT_SSH_KEY_DEB020325
     AddKeysToAgent yes
 ```
 
 ## 3. 1Password Storage Guide
 
+Here's an example of how you might name the the ssh keys in 1pass
+
+In this way, we can export the keys to the shell environment so terraform can pick them up.
+To pull them from 1pass, we'd use: `op item get "2025 Feb 020325 Debian project" --fields label=id_ed25519_withpass_DO_TF_HUMAN_SSH_KEY_DEB020325` for example.
+
+And, to export to the shell env, we'd run it like this:
+`export TF_VAR_LINUX_HUMAN_SSH_KEY_PUB_WITHPASS_DEB020325=$(op item get "2025 Feb 020325 Debian project" --fields label=id_ed25519_withpass_DO_TF_HUMAN_SSH_KEY_DEB020325)`
+
+Representing this first item. Add the 2nd one to keep future our CICD bot's ssh key (I like to add their private & public ssh key files to the vault as well). Both will be exported to the server by Terraform, so the server can verify that it's us trying to access the server from our laptop (or that it's a CICD bot from github actions) when we attempt to ssh in.
+
 ### Human Developer Keys
 
-- Vault: Development
-- Item Type: SSH Key
-- Item Name: "DevOps SSH Key - Portfolio Feb 2025"
+- Vault: 2025 Feb 020325 Debian project
+- Item Type: password
+- Item Name: id_ed25519_withpass_DO_TF_HUMAN_SSH_KEY_DEB020325
 - Fields:
-  - Private Key: [Contents of ~/.ssh/id_ed25519_devops_DEB020325]
-  - Public Key: [Contents of ~/.ssh/id_ed25519_devops_DEB020325.pub]
+  - Private Key: [Contents of ~/.ssh/id_ed25519_withpass_DO_TF_HUMAN_SSH_KEY_DEB020325]
+  - Public Key: [Contents of ~/.ssh/id_ed25519_withpass_DO_TF_HUMAN_SSH_KEY_DEB020325.pub]
   - Passphrase: [Your key password]
   - Purpose: "Human developer access for Portfolio Feb 2025"
 
 ### CI/CD Bot Keys
 
-- Vault: Development
-- Item Type: SSH Key
-- Item Name: "CI/CD Bot SSH Key - Portfolio Feb 2025"
+- Vault: 2025 Feb 020325 Debian project
+- Item Type: password
+- Item Name: "id_ed25519_nopass_GHACICD_BOT_SSH_KEY_DEB020325"
 - Fields:
-  - Private Key: [Contents of ~/.ssh/id_ed25519_cicdbot_DEB020325]
-  - Public Key: [Contents of ~/.ssh/id_ed25519_cicdbot_DEB020325.pub]
+  - Private Key: [Contents of ~/.ssh/id_ed25519_nopass_GHACICD_BOT_SSH_KEY_DEB020325]
+  - Public Key: [Contents of ~/.ssh/id_ed25519_nopass_GHACICD_BOT_SSH_KEY_DEB020325.pub]
   - Purpose: "GitHub Actions CI/CD bot access - no password"
+
+Command to add a password to 1pass:
+
+```bash
+
+
+op item create --vault "VaultName" \
+  --title "Title of Secure Note" \
+  --category "Secure Note" \
+  "id_ed25519_withpass_DO_TF_HUMAN_SSH_KEY_DEB020325_pub[password]=$(cat ./example.txt)"
+
+# For text fields, use [text]
+# "projectName[text]=$projectName"
+
+Field types you can use include:
+
+[text] - Regular text field
+[password] - Password field (concealed by default)
+[email] - Email field
+[url] - URL field
+[date] - Date field
+[file] - File attachment
+[totp] - One-time password field
+
+# For SSH keys specifically, you might want to use:
+
+op item create --vault "VaultName" \
+  --title "Title of Secure Note" \
+#   --category "SSH Key" \
+#   "public_key[text]=$(cat ./id_ed25519.pub)" \
+#   "private_key[password]=$(cat ./id_ed25519)"
+
+```
 
 ## 4. Key Distribution Guide
 
