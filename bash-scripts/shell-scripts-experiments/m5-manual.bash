@@ -84,16 +84,16 @@ if op item get "$ITEM_TITLE" --vault "$VAULT" &>/dev/null; then
 
     # Update existing item with just the public keys
     op item edit "$ITEM_TITLE" --vault "$VAULT" \
-        "id_ed25519_nopass_GHACICD_BOT_PUB_SSH_KEY_DEB020325[text]=$(cat ~/.ssh/id_ed25519_nopass_GHACICD_BOT_SSH_KEY_DEB020325.pub)" \
-        "id_ed25519_withpass_DO_TF_HUMAN_PUB_SSH_KEY_DEB020325[text]=$(cat ~/.ssh/id_ed25519_withpass_DO_TF_HUMAN_SSH_KEY_DEB020325.pub)"
+        "id_ed25519_nopass_GHACICD_BOT_PUB_SSH_KEY[text]=$(cat ~/.ssh/id_ed25519_nopass_GHACICD_BOT_PUB_SSH_KEY.pub)" \
+        "id_ed25519_withpass_DO_TF_HUMAN_PUB_SSH_KEY[text]=$(cat ~/.ssh/id_ed25519_withpass_DO_TF_HUMAN_PUB_SSH_KEY.pub)"
 else
     echo "Item '$ITEM_TITLE' does not exist in vault '$VAULT'. Creating new item with public keys."
 
     # Create new item with just the public keys
     op item create --vault "$VAULT" \
         --title "$ITEM_TITLE" \
-        "id_ed25519_nopass_GHACICD_BOT_PUB_SSH_KEY_DEB020325[text]=$(cat ~/.ssh/id_ed25519_nopass_GHACICD_BOT_SSH_KEY_DEB020325.pub)" \
-        "id_ed25519_withpass_DO_TF_HUMAN_PUB_SSH_KEY_DEB020325[text]=$(cat ~/.ssh/id_ed25519_withpass_DO_TF_HUMAN_SSH_KEY_DEB020325.pub)"
+        "id_ed25519_nopass_GHACICD_BOT_PUB_SSH_KEY[text]=$(cat ~/.ssh/id_ed25519_nopass_GHACICD_BOT_PUB_SSH_KEY.pub)" \
+        "id_ed25519_withpass_DO_TF_HUMAN_PUB_SSH_KEY[text]=$(cat ~/.ssh/id_ed25519_withpass_DO_TF_HUMAN_PUB_SSH_KEY.pub)"
 fi
 
 echo "Done: Setup new ssh key, uploaded it to DO, GH, 1P"
