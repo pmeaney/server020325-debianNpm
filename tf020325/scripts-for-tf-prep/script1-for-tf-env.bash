@@ -1,5 +1,19 @@
 #!/bin/bash
 
+
+# This script imports the following items from 1password.
+# (Note: When we expoert them into the env, we have to add TF_VAR_ to most of them, so terraform can import them)
+# 1password field name                        example of what mine is.
+# DIGITALOCEAN_ACCESS_TOKEN                   dop_v1_fb41e3...    (full permissions)
+# LINUX_SERVER_NAME                           server020325-debianNpm
+# LINUX_HUMAN_SSH_KEY_PUB_WITHPASS            ssh-ed25519 AAAAC3NzaC1lZD...
+# LINUX_USERNAME_DEVOPS_HUMAN                 patDevOpsUser
+# LINUX_USERPASSWORD_DEVOPS_HUMAN             someRandomPass (Make it a brand new pw, separate from any other Github login pw you use. We upload the ssh key to DO & GH, so this pw will be used to authenticate with those services from anywhere we have the priv key-- in this case, our laptop)
+# LINUX_GHACICD_BOT_SSH_KEY_PUB_NOPASS        ssh-ed25519 AAAAC3Oza9LbpQ...
+# LINUX_USERNAME_GHA_CICD_BOT                 ghaCICDDevOpsUser
+# VAULT_1P                                    Z_Tech_ClicksAndCodes
+# ITEM_1P                                     2025 Feb 020325 Debian project
+
 # Exit on any error
 set -e
 
