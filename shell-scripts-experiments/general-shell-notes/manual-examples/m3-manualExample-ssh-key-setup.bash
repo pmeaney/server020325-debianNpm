@@ -10,7 +10,6 @@ echo "Add that GH PAT to a 1pass field: GH_PAT_repo_read-org_admin-publickey"
 echo "Create a DigitalOcean Token with scopes: Full Access (we may dial this in later)"
 echo "Add that DO Token to a 1pass field: DO_TOKEN_ALL_PERMISSIONS_020325"
 
-
 echo "Logging into DigitalOcean CLI Tool"
 doctl auth init --context default --access-token "$(op item get "2025 Feb 020325 Debian project" --vault "Z_Tech_ClicksAndCodes" --field DO_TOKEN_ALL_PERMISSIONS_020325)"
 
@@ -18,10 +17,10 @@ doctl auth init --context default --access-token "$(op item get "2025 Feb 020325
 echo "Logging into Github CLI Tool"
 echo "$(op item get "2025 Feb 020325 Debian project" --vault "Z_Tech_ClicksAndCodes" --field GH_PAT_repo_read-org_admin-publickey)" | gh auth login --with-token
 
-echo "Generating key for CICD Bot user"
+echo "Generating key for CICD Bot user-- no pass"
 ssh-keygen -t ed25519 -C "patrick.wm.meaney@gmail.com" -f ~/.ssh/id_ed25519_nopass_GHACICD_BOT_SSH_KEY_DEB020325 -N ""
 
-echo "Generating key for Human developer user"
+echo "Generating key for Human developer user-- with password"
 ssh-keygen -t ed25519 -C "patrick.wm.meaney@gmail.com" -f ~/.ssh/id_ed25519_withpass_DO_TF_HUMAN_SSH_KEY_DEB020325
 
 echo "Adding keys to ssh agent"

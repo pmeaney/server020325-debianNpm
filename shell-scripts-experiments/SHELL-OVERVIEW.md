@@ -58,7 +58,7 @@ server-name
 2. A Human User ssh key for logging into the DigitalOcean server we'll launch with Terraform, via our developer laptop.
 3. A CICD Bot User ssh key for logging into the DigitalOcean server via a Github Actions CICD process we'll create in the future
 
-So, Step 2 will automate all 3, or if you prefer, just the last two.
+So, Step 2 will automate all 3, or just the last two.
 
 ### Step 3: Setup of remaining Terraform-related input & output secrets
 

@@ -1,3 +1,14 @@
+
+# The idea behind the script was to auto-create 1pass secrets, upload ssh keys to DO & GH,
+# and eventually other things.  Might return to finish it-- needed to work on other things.
+# 
+# echo "This script will do the following:"
+# echo "Section 1."
+# echo " - CLI Login to DigitalOcean, Github for upcoming operations (ssh key upload)"
+# echo " - Create ssh keys for the terraform project (DigitalOcean, Github)"
+# echo " - Upload those ssh keys to DigitalOcean, Github"
+
+
 #!/bin/bash
 
 # Helper function to read user input with a default value
