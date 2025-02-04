@@ -53,28 +53,8 @@ ssh -T git@github.com
 
 ```bash
 
-Rather than having multiple definitions, like this... we can make them more compact (see next section)
-
-# Configuration Option 1 - Standard Port (22)
-Host github.com
-    HostName github.com
-    User git
-    AddKeysToAgent yes
-    IdentityFile ~/.ssh/id_ed25519_withpass_GENERAL_GITHUB_HUMANDEV_USE_020325
-
-Host github.com
-    HostName github.com
-    User git
-    AddKeysToAgent yes
-    IdentityFile ~/.ssh/id_ed25519_withpass_GENERAL_GITHUB_HUMANDEV_USE_020325
-
-Host github.com
-    HostName github.com
-    User git
-    AddKeysToAgent yes
-    IdentityFile ~/.ssh/id_ed25519_withpass_GENERAL_GITHUB_HUMANDEV_USE_020325
-
-# Configuration Option 2 - Port 443 (for restrictive firewalls)
+# port 443 (https) example
+# (for some reason, 22 (ssh) isn't working for me-- maybe bc I ran `gh auth login` and selected https instead of ssh or something like that)
 # Direct GitHub Access
 Host github.com
     HostName ssh.github.com
@@ -96,22 +76,20 @@ Host github.com-human-do
     Port 443
     IdentityFile ~/.ssh/id_ed25519_withpass_DO_TF_HUMAN_SSH_KEY_DEB020325
 
-######## Compact example
-# Configuration Option 1 - Standard Port (22)
-Host github.com
-    HostName github.com
-    User git
-    AddKeysToAgent yes
-    IdentityFile ~/.ssh/id_ed25519_withpass_GENERAL_GITHUB_HUMANDEV_USE_020325
-    IdentityFile ~/.ssh/id_ed25519_nopass_GHACICD_BOT_SSH_KEY_DEB020325
-    IdentityFile ~/.ssh/id_ed25519_withpass_DO_TF_HUMAN_SSH_KEY_DEB020325
-
-# Direct GitHub Access
-Host github.com
-    HostName ssh.github.com
-    User git
-    Port 443
-    IdentityFile ~/.ssh/id_ed25519_withpass_GENERAL_GITHUB_HUMANDEV_USE_020325
-    IdentityFile ~/.ssh/id_ed25519_nopass_GHACICD_BOT_SSH_KEY_DEB020325
-    IdentityFile ~/.ssh/id_ed25519_withpass_DO_TF_HUMAN_SSH_KEY_DEB020325
+# default config examples-- runs on port 22
+#Host github.com
+#    HostName github.com
+#    User git
+#    AddKeysToAgent yes
+#    IdentityFile ~/.ssh/id_ed25519_withpass_GENERAL_GITHUB_HUMANDEV_USE_020325
+#Host github.com
+#    HostName github.com
+#    User git
+#    AddKeysToAgent yes
+#    IdentityFile ~/.ssh/id_ed25519_nopass_GHACICD_BOT_SSH_KEY_DEB020325
+#Host github.com
+#    HostName github.com
+#    User git
+#    AddKeysToAgent yes
+#    IdentityFile ~/.ssh/id_ed25519_withpass_DO_TF_HUMAN_SSH_KEY_DEB020325
 ```
