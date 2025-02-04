@@ -6,11 +6,24 @@
 
 ```bash
 # Generate SSH key with a strong password
-ssh-keygen -t ed25519 -C "your.email@example.com" -f ~/.ssh/id_ed25519_devops_DEB020325
+ssh-keygen -t ed25519 -C "your.email@example.com" -f ~/.ssh/id_ed25519_withpass_DO_TF_HUMAN_SSH_KEY_DEB020325
 
 # Add to SSH agent
 eval "$(ssh-agent -s)"
-ssh-add ~/.ssh/id_ed25519_devops_DEB020325
+ssh-add ~/.ssh/id_ed25519_withpass_DO_TF_HUMAN_SSH_KEY_DEB020325
+
+# Add to 1pass
+op item create --vault "VaultName" \
+  --title "Title of Secure Note" \
+  --category "Secure Note" \
+  "public_key[text]=$(cat ~/.ssh/id_ed25519_withpass_DO_TF_HUMAN_SSH_KEY_DEB020325.pub)" \
+  "private_key[file]=$(cat ~/.ssh/id_ed25519_withpass_DO_TF_HUMAN_SSH_KEY_DEB020325)"
+
+op item create --vault "Z_Tech_ClicksAndCodes" \
+  --title "2025 Feb 020325 Debian project" \
+  --category "Secure Note" \
+  "public_key[text]=$(cat ~/.ssh/id_ed25519_withpass_DO_TF_HUMAN_SSH_KEY_DEB020325.pub)" \
+  "private_key[file]=$(cat ~/.ssh/id_ed25519_withpass_DO_TF_HUMAN_SSH_KEY_DEB020325)"
 ```
 
 ### CI/CD Bot Key (no password)
@@ -44,7 +57,12 @@ Host do-portfolio-feb2025-cicd
     AddKeysToAgent yes
 ```
 
-## 3. 1Password Storage Guide
+## 3. Add SSH Keys to Digital Ocean & Github
+
+[DigitalOcean ssh keys dashboard](https://cloud.digitalocean.com/account/security?i=16c58b)
+[Github ssh keys dashboard](https://github.com/settings/keys)
+
+## 1Password Storage Guide
 
 Here's an example of how you might name the the ssh keys in 1pass
 
@@ -100,13 +118,29 @@ Field types you can use include:
 [file] - File attachment
 [totp] - One-time password field
 
-# For SSH keys specifically, you might want to use:
-
+# For SSH keys specifically, you might want to use...
+# To Create a Vault & Secure Note, then add the keys:
 op item create --vault "VaultName" \
   --title "Title of Secure Note" \
-#   --category "SSH Key" \
-#   "public_key[text]=$(cat ./id_ed25519.pub)" \
-#   "private_key[password]=$(cat ./id_ed25519)"
+  --category "SSH Key" \
+  "public_key[text]=$(cat ./id_ed25519.pub)" \
+  "private_key[file]=$(cat ./id_ed25519)"
+
+# To edit an existing secure note in 1Password, you'll need to use op item edit instead of op item create
+
+
+# Import text from a text file.
+op item edit --vault "SomeExistingVault" \
+  --title "Some SecureNote Title" \
+  "nameOf--someTextField[text]=$(cat ./example.txt)"
+
+# Upload ssh keys
+op item edit --vault "SomeExistingVault" \
+  --title "Some SecureNote Title" \
+  "cicd_bot_public_key[text]=$(cat ~/.ssh/id_ed25519_nopass_GHACICD_BOT_SSH_KEY_DEB020325.pub)" \
+  "cicd_bot_private_key[file]=~/.ssh/id_ed25519_nopass_GHACICD_BOT_SSH_KEY_DEB020325" \
+  "human_dev_public_key[text]=$(cat ~/.ssh/id_ed25519_withpass_DO_TF_HUMAN_SSH_KEY_DEB020325.pub)" \
+  "human_dev_private_key[file]=~/.ssh/id_ed25519_withpass_DO_TF_HUMAN_SSH_KEY_DEB020325"
 
 ```
 

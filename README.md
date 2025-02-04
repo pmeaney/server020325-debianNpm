@@ -11,8 +11,6 @@ terraform apply
 
 ```
 
-# Server Setup & Docker Networking Guide
-
 ### Setting Up Environment Variables
 
 Export required variables from 1Password:
