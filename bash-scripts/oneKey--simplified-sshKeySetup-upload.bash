@@ -1,3 +1,12 @@
+
+
+#
+#           STILL TESTING THIS OUT  Feb-04-2025–12-35-pm
+#
+#
+
+
+
 # The purpose of this script is to allow a developer to quickly:
 # - run through the process of SSH key setup, 
 # - adding public ssh key to DigitalOcean, Github, & storing it in 1password
