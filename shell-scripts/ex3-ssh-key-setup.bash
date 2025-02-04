@@ -1,7 +1,9 @@
+
+
 ```bash
 
 # For Github:
-echo "Create a Github Personal Access Token with scopes: admin:public_ke, rep, read:org"
+echo "Create a Github Personal Access Token with scopes: admin:public_key, rep, read:org"
 echo "Add that GH PAT to a 1pass field: GH_PAT_repo_read-org_admin-publickey"
 
 # For DO:
@@ -30,17 +32,27 @@ ssh-add ~/.ssh/id_ed25519_withpass_DO_TF_HUMAN_SSH_KEY_DEB020325
 echo "Adding keys to ssh config file"
 cat << EOF >> ~/.ssh/config
 
+# Direct GitHub Access
+Host github.com
+    HostName ssh.github.com
+    User git
+    Port 443
+    IdentityFile ~/.ssh/id_ed25519_withpass_GENERAL_GITHUB_HUMANDEV_USE_020325
+
 # CICD Bot SSH Key
 Host github.com-cicdbot
-    HostName github.com
+    HostName ssh.github.com
     User git
+    Port 443
     IdentityFile ~/.ssh/id_ed25519_nopass_GHACICD_BOT_SSH_KEY_DEB020325
 
-# Human Developer SSH Key
-Host github.com-human
-    HostName github.com
+# Human Developer SSH Key (Terraform/DO)
+Host github.com-human-do
+    HostName ssh.github.com
     User git
+    Port 443
     IdentityFile ~/.ssh/id_ed25519_withpass_DO_TF_HUMAN_SSH_KEY_DEB020325
+
 EOF
 
 echo "Uploading ssh public keys for both users to DigitalOcean via DO CLI"

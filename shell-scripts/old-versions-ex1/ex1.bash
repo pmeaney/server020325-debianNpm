@@ -73,14 +73,14 @@ TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 if op item get "$ITEM_TITLE" --vault "$VAULT" &>/dev/null; then
     echo "Updating existing item with tokens..."
     op item edit "$ITEM_TITLE" --vault "$VAULT" \
-        "GH_PAT[password]=$GITHUB_PAT" \
-        "DO_TOKEN[password]=$DO_TOKEN"
+        "GH_PAT_${TIMESTAMP}[password]=$GITHUB_PAT" \
+        "DO_TOKEN_${TIMESTAMP}[password]=$DO_TOKEN"
 else
     echo "Creating new item with tokens..."
     op item create --vault "$VAULT" \
         --title "$ITEM_TITLE" \
-        "GH_PAT[password]=$GITHUB_PAT" \
-        "DO_TOKEN[password]=$DO_TOKEN"
+        "GH_PAT_${TIMESTAMP}[password]=$GITHUB_PAT" \
+        "DO_TOKEN_${TIMESTAMP}[password]=$DO_TOKEN"
 fi
 
 # Initialize DO and GH CLI tools
