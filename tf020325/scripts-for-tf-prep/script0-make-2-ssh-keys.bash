@@ -56,10 +56,10 @@ create_and_upload_ssh_key() {
 
 # New key -- from shell script
 Host github.com
-   HostName ssh.github.com
-   User git
-   Port 443
-   IdentityFile ${ssh_key_file_creation_path}
+    HostName ssh.github.com
+    User git
+    Port 443
+    IdentityFile ${ssh_key_file_creation_path}
 EOF
 
    echo "Uploading ssh public key to DigitalOcean via DO CLI"
