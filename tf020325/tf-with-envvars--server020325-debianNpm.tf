@@ -76,7 +76,7 @@ variable "LINUX_USERNAME_GHA_CICD_BOT" {
 }
 variable "LINUX_GHACICD_BOT_SSH_KEY_PUB_NOPASS" {
   type = string
-  description = "eLINUX_HUMAN_SSH_KEY_PUB_WITHPASSnvironment variable for CICD Runner bots devops ssh key"
+  description = "environment variable for CICD Runner bots devops ssh key"
   default = "blahSshKey"
 }
 
