@@ -1,3 +1,7 @@
+# Shell Script Process
+
+Here's what we'll eventually have.
+
 ## Manual steps:
 
 - You manually create:
@@ -31,6 +35,9 @@ So, Step 2 will automate all 3, or if you prefer, just the last two.
 
 In our Terraform project, we input & output some secrets. Let's automate the setup of those.
 Our goal is to automate their preparation for use with Terraform (i.e. import them into 1pass, then inject them into our shell env)
+
+The following shows inputs.
+We also want to import to 1pass the output from terraform (IP address).
 
 ##### Terraform variables
 
