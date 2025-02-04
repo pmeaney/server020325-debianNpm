@@ -20,7 +20,7 @@ get_1p_field() {
 }
 
 # DigitalOcean access token
-export DIGITALOCEAN_ACCESS_TOKEN=$(get_1p_field "DIGITAL_OCEAN_TOKEN_DEB020325")
+export DIGITALOCEAN_ACCESS_TOKEN=$(get_1p_field "DIGITAL_OCEAN_TOKEN")
 
 # Server name
 export TF_VAR_LINUX_SERVER_NAME=$(get_1p_field "LINUX_SERVER_NAME")

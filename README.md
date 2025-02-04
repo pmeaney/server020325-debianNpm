@@ -47,8 +47,8 @@ export TF_VAR_ITEM_1P=$(op item get "2025 Feb 020325 Debian project" --fields la
 First, export required environment variables:
 
 ```bash
-export TF_VAR_LINUX_USERNAME_DEVOPS_HUMAN_DEB020325=$(op item get "2025 Feb 020325 Debian project" --fields label=LINUX_USERNAME_DEVOPS_HUMAN_DEB020325) && \
-export LINUX_SERVER_IPADDRESS_DEB020325=$(op item get "2025 Feb 020325 Debian project" --fields label=LINUX_SERVER_IPADDRESS_DEB020325)
+export TF_VAR_LINUX_USERNAME_DEVOPS_HUMAN=$(op item get "2025 Feb 020325 Debian project" --fields label=LINUX_USERNAME_DEVOPS_HUMAN) && \
+export LINUX_SERVER_IPADDRESS=$(op item get "2025 Feb 020325 Debian project" --fields label=LINUX_SERVER_IPADDRESS)
 ```
 
 ### Deploying NPM Configuration
@@ -56,10 +56,10 @@ export LINUX_SERVER_IPADDRESS_DEB020325=$(op item get "2025 Feb 020325 Debian pr
 Transfer configuration files to the server:
 
 ```bash
-rsync -avvz ./npm020325/ "${TF_VAR_LINUX_USERNAME_DEVOPS_HUMAN_DEB020325}"@"${LINUX_SERVER_IPADDRESS_DEB020325}":~/npm020325
+rsync -avvz ./npm020325/ "${TF_VAR_LINUX_USERNAME_DEVOPS_HUMAN}"@"${LINUX_SERVER_IPADDRESS}":~/npm020325
 
 # OR if you need to specify your identity file:
-rsync -avvz -e "ssh -i ~/.ssh/id_ed25519_nopass_LINUX_SSH_KEY_DEB020325" ./npm020325/ "${TF_VAR_LINUX_USERNAME_DEVOPS_HUMAN_DEB020325}"@"${LINUX_SERVER_IPADDRESS_DEB020325}":~/npm020325
+rsync -avvz -e "ssh -i ~/.ssh/id_ed25519_nopass_LINUX_SSH_KEY" ./npm020325/ "${TF_VAR_LINUX_USERNAME_DEVOPS_HUMAN}"@"${LINUX_SERVER_IPADDRESS}":~/npm020325
 
 
 # Start NPM containers
@@ -99,7 +99,7 @@ See [NPM Project Readme](./npm020325/README.md) for more info on Nginx Proxy Man
 To transfer updates you make to your NPM Docker Compose file in a quick, automated way, run this rsync command from your developer environment (laptop), and assuming rsync is installed on the remote server, it'll transfer the whole `npm020325` directory to the server. Useful when initially setting things up & testing things out.
 
 ```bash
-rsync -avvz ./npm020325/ "${TF_VAR_LINUX_USERNAME_DEVOPS_HUMAN_DEB020325}"@"${LINUX_SERVER_IPADDRESS_DEB020325}":~/npm020325
+rsync -avvz ./npm020325/ "${TF_VAR_LINUX_USERNAME_DEVOPS_HUMAN}"@"${LINUX_SERVER_IPADDRESS}":~/npm020325
 
 ```
 
@@ -109,7 +109,7 @@ Deploy the newest Nginx Proxy Manager config update via rsync instead of git pro
 
 ```bash
 
-rsync -avvz ./npm020325/ "${TF_VAR_LINUX_USERNAME_DEVOPS_HUMAN_DEB020325}"@"${LINUX_SERVER_IPADDRESS_DEB020325}":~/npm020325
+rsync -avvz ./npm020325/ "${TF_VAR_LINUX_USERNAME_DEVOPS_HUMAN}"@"${LINUX_SERVER_IPADDRESS}":~/npm020325
 
 # if rsync isn't installed on remote server (and your laptop), be sure to install it first.  For debian, for example:
 sudo apt install rsync -y
@@ -124,12 +124,12 @@ See [Project Ssh Key Setup Guide](./docs/GUIDE-SSH-KEY-SETUP.md) for more info o
 - How ssh keys are used in the project & related projects such as app deployments
 
 ```bash
-# for ssh login, I like to pull login & ip from 1pass:export TF_VAR_LINUX_USERNAME_DEVOPS_HUMAN_DEB020325=$(op item get "2025 Feb 020325 Debian project" --fields label=LINUX_USERNAME_DEVOPS_HUMAN_DEB020325) && \
-export TF_VAR_LINUX_USERNAME_DEVOPS_HUMAN_DEB020325=$(op item get "2025 Feb 020325 Debian project" --fields label=LINUX_USERNAME_DEVOPS_HUMAN_DEB020325) && \
-export LINUX_SERVER_IPADDRESS_DEB020325=$(op item get "2025 Feb 020325 Debian project" --fields label=LINUX_SERVER_IPADDRESS_DEB020325)
+# for ssh login, I like to pull login & ip from 1pass:export TF_VAR_LINUX_USERNAME_DEVOPS_HUMAN=$(op item get "2025 Feb 020325 Debian project" --fields label=LINUX_USERNAME_DEVOPS_HUMAN) && \
+export TF_VAR_LINUX_USERNAME_DEVOPS_HUMAN=$(op item get "2025 Feb 020325 Debian project" --fields label=LINUX_USERNAME_DEVOPS_HUMAN) && \
+export LINUX_SERVER_IPADDRESS=$(op item get "2025 Feb 020325 Debian project" --fields label=LINUX_SERVER_IPADDRESS)
 
 # then ssh in:
-ssh "${TF_VAR_LINUX_USERNAME_DEVOPS_HUMAN_DEB020325}"@"${LINUX_SERVER_IPADDRESS_DEB020325}"
+ssh "${TF_VAR_LINUX_USERNAME_DEVOPS_HUMAN}"@"${LINUX_SERVER_IPADDRESS}"
 
 # and if you want, view the cloud-init logs to see how everything booted & make sure cloud init installed what it's supposed to (see bottom of ./terraform-server--Debian-Jan2025-PortfolioEtc/yamlScripts/with-envVars.yaml file)
 sudo cat /var/log/cloud-init-output.log
@@ -141,14 +141,14 @@ Exported env vars must be prefixed with `TF_VAR_` to be picked up by Terraform.
 
 We'll have the following items in our OS Env so Terraform can access them:
 
-| Environment Variable                                  | Notes                                                                                                                     | Example Value                                                                                                                                |
-| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| TF_VAR_LINUX_HUMAN_SSH_KEY_PUB_WITHPASS_DEB020325     | Pub ssh key for human dev user. Used during ssh login                                                                     | [More Info](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) |
-| TF_VAR_LINUX_USERNAME_DEVOPS_HUMAN_DEB020325          | Username to setup as Server's first user. You'll use it during ssh login                                                  | bobDev                                                                                                                                       |
-| TF_VAR_LINUX_USERPASSWORD_DEVOPS_HUMAN_DEB020325      | User's password to setup for Server's first user. You'll use it during ssh login                                          |                                                                                                                                              |
-| TF_VAR_LINUX_USERNAME_GHA_CICD_BOT_DEB020325          | Username for CICD Bot to use. The server is setup with this as a user, so a CICD Runner bot can ssh in to deploy projects | githubCICDBotUser                                                                                                                            |
-| TF_VAR_LINUX_GHACICD_BOT_SSH_KEY_PUB_NOPASS_DEB020325 | Pub ssh key for Github CICD Bot user                                                                                      | [More Info](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) |
-| TF_VAR_LINUX_SERVER_NAME_DEB020325                    | Used by DigitalOcean to give the server a name. Shows up in DO Dashboard                                                  | server020325-debianNpm                                                                                                                       |
+| Environment Variable                        | Notes                                                                                                                     | Example Value                                                                                                                                |
+| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| TF_VAR_LINUX_HUMAN_SSH_KEY_PUB_WITHPASS     | Pub ssh key for human dev user. Used during ssh login                                                                     | [More Info](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) |
+| TF_VAR_LINUX_USERNAME_DEVOPS_HUMAN          | Username to setup as Server's first user. You'll use it during ssh login                                                  | bobDev                                                                                                                                       |
+| TF_VAR_LINUX_USERPASSWORD_DEVOPS_HUMAN      | User's password to setup for Server's first user. You'll use it during ssh login                                          |                                                                                                                                              |
+| TF_VAR_LINUX_USERNAME_GHA_CICD_BOT          | Username for CICD Bot to use. The server is setup with this as a user, so a CICD Runner bot can ssh in to deploy projects | githubCICDBotUser                                                                                                                            |
+| TF_VAR_LINUX_GHACICD_BOT_SSH_KEY_PUB_NOPASS | Pub ssh key for Github CICD Bot user                                                                                      | [More Info](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) |
+| TF_VAR_LINUX_SERVER_NAME                    | Used by DigitalOcean to give the server a name. Shows up in DO Dashboard                                                  | server020325-debianNpm                                                                                                                       |
 
 ## Nginx Proxy Manager & Networking in Dockerized Apps
 
