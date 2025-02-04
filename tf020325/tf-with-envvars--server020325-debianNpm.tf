@@ -158,6 +158,7 @@ variable "ITEM_1P" {
   default = "1pass item name (e.g. secure note)"
 }
 
+# This works
 resource "null_resource" "store_ip_1password" {
   provisioner "local-exec" {
     command = <<-EOT
