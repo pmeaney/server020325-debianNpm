@@ -1,5 +1,16 @@
 # Shell Script Process
 
+Update:
+
+Assume we have a presets section of the script with the info we need--
+NOT to ask the user for info.
+
+Just have them put the info in a presets section of the script.
+
+Keep it simple-- this just for me for the most part!
+
+---
+
 Here's what we'll eventually have.
 
 ## Manual steps:
