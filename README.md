@@ -22,17 +22,17 @@ Export required variables from 1Password:
 # exporting them into the current shell env, from storage in a password manager (1password in this case)
 # For more info on how ssh keys are used in this project, see ./docs/GUIDE-SSH-KEY-SETUP.md
 # General: DO token, & name to give server
-export DIGITALOCEAN_ACCESS_TOKEN=$(op item get "2025 Feb 020325 Debian project" --fields label=TF_VAR_DIGITAL_OCEAN_TOKEN_DEB020325) &&
+export DIGITALOCEAN_ACCESS_TOKEN=$(op item get "2025 Feb 020325 Debian project" --fields label=DIGITAL_OCEAN_TOKEN_DEB020325) &&
 export TF_VAR_LINUX_SERVER_NAME_DEB020325=$(op item get "2025 Feb 020325 Debian project" --fields label=LINUX_SERVER_NAME_DEB020325) &&
 
 # Human user secrets: ssh pub key, ssh user, ssh pw
-export TF_VAR_LINUX_HUMAN_SSH_KEY_PUB_WITHPASS_DEB020325=$(op item get "2025 Feb 020325 Debian project" --fields label=id_ed25519_withpass_DO_TF_HUMAN_SSH_KEY_DEB020325) &&
+export TF_VAR_LINUX_HUMAN_SSH_KEY_PUB_WITHPASS_DEB020325=$(op item get "2025 Feb 020325 Debian project" --fields label=id_ed25519_withpass_DO_TF_HUMAN_PUB_SSH_KEY_DEB020325) &&
 export TF_VAR_LINUX_USERNAME_DEVOPS_HUMAN_DEB020325=$(op item get "2025 Feb 020325 Debian project" --fields label=LINUX_USERNAME_DEVOPS_HUMAN_DEB020325) &&
 export TF_VAR_LINUX_USERPASSWORD_DEVOPS_HUMAN_DEB020325=$(op item get "2025 Feb 020325 Debian project" --fields label=LINUX_USERPASSWORD_DEVOPS_HUMAN_DEB020325) &&
 
 # CICD bot user secrets: ssh pub key, ssh user, (no ssh pw for bot user)
-export TF_VAR_LINUX_GHACICD_BOT_SSH_KEY_PUB_NOPASS_DEB020325=$(op item get "2025 Feb 020325 Debian project" --fields label=id_ed25519_nopass_GHACICD_BOT_SSH_KEY_DEB020325) &&
-export TF_VAR_TF_VAR_LINUX_USERNAME_GHA_CICD_BOT_DEB020325=$(op item get "2025 Feb 020325 Debian project" --fields label=TF_VAR_LINUX_USERNAME_GHA_CICD_BOT_DEB020325)
+export TF_VAR_LINUX_GHACICD_BOT_SSH_KEY_PUB_NOPASS_DEB020325=$(op item get "2025 Feb 020325 Debian project" --fields label=id_ed25519_nopass_GHACICD_BOT_PUB_SSH_KEY_DEB020325) &&
+export TF_VAR_TF_VAR_LINUX_USERNAME_GHA_CICD_BOT_DEB020325=$(op item get "2025 Feb 020325 Debian project" --fields label=LINUX_USERNAME_GHA_CICD_BOT_DEB020325)
 ```
 
 ## Nginx Proxy Manager Configuration
