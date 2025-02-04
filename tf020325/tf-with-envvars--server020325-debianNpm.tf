@@ -51,17 +51,17 @@ provider "digitalocean" {}
 
 ###############################################
 ### Env vars Section -- Human users
-variable "LINUX_HUMAN_SSH_KEY_PUB_WITHPASS_DEB020325" {
+variable "LINUX_HUMAN_SSH_KEY_PUB_WITHPASS" {
   type = string
   description = "environment variable for Human Developers devops ssh key"
   default = "blahSshKey"
 }
-variable "LINUX_USERNAME_DEVOPS_HUMAN_DEB020325" {
+variable "LINUX_USERNAME_DEVOPS_HUMAN" {
   type = string
   description = "environment variable for devops user"
   default = "blahLinuxUser"
 }
-variable "LINUX_USERPASSWORD_DEVOPS_HUMAN_DEB020325" {
+variable "LINUX_USERPASSWORD_DEVOPS_HUMAN" {
   type = string
   description = "environment variable for devops users password"
   default = "blahLinuxUserPassword"
@@ -69,19 +69,19 @@ variable "LINUX_USERPASSWORD_DEVOPS_HUMAN_DEB020325" {
 
 ### Env vars Section -- GHA Cicd bot
 
-variable "LINUX_USERNAME_GHA_CICD_BOT_DEB020325" {
+variable "LINUX_USERNAME_GHA_CICD_BOT" {
   type = string
   description = "environment variable for github actions cicd bot user (so it can login to run tasks)"
   default = "blahLinuxUser"
 }
-variable "LINUX_GHACICD_BOT_SSH_KEY_PUB_NOPASS_DEB020325" {
+variable "LINUX_GHACICD_BOT_SSH_KEY_PUB_NOPASS" {
   type = string
-  description = "eLINUX_HUMAN_SSH_KEY_PUB_WITHPASS_DEB020325nvironment variable for CICD Runner bots devops ssh key"
+  description = "eLINUX_HUMAN_SSH_KEY_PUB_WITHPASSnvironment variable for CICD Runner bots devops ssh key"
   default = "blahSshKey"
 }
 
 # the SERVER_NAME is not as important to set via env var... but we will go ahead and do it
-variable "LINUX_SERVER_NAME_DEB020325" {
+variable "LINUX_SERVER_NAME" {
   type = string
   description = "environment variable for devops user"
   default = "blahServerName"
@@ -91,20 +91,20 @@ data "template_file" "my_example_user_data" {
   template = templatefile("./yamlScripts/with-envVars.yaml",
     {
       # For dev login
-      LINUX_USERNAME_DEVOPS_HUMAN_DEB020325 = "${var.LINUX_USERNAME_DEVOPS_HUMAN_DEB020325}",
-      LINUX_USERPASSWORD_DEVOPS_HUMAN_DEB020325 = "${var.LINUX_USERPASSWORD_DEVOPS_HUMAN_DEB020325}",
-      LINUX_HUMAN_SSH_KEY_PUB_WITHPASS_DEB020325 = "${var.LINUX_HUMAN_SSH_KEY_PUB_WITHPASS_DEB020325}",
+      LINUX_USERNAME_DEVOPS_HUMAN = "${var.LINUX_USERNAME_DEVOPS_HUMAN}",
+      LINUX_USERPASSWORD_DEVOPS_HUMAN = "${var.LINUX_USERPASSWORD_DEVOPS_HUMAN}",
+      LINUX_HUMAN_SSH_KEY_PUB_WITHPASS = "${var.LINUX_HUMAN_SSH_KEY_PUB_WITHPASS}",
 
       # For Github Actions ("GHA") CICD bot to log in.  no pass item b/c the ssh key has no pass-- the ssh key is only for cicd bot
-      LINUX_USERNAME_GHA_CICD_BOT_DEB020325 = "${var.LINUX_USERNAME_GHA_CICD_BOT_DEB020325}",
-      LINUX_GHACICD_BOT_SSH_KEY_PUB_NOPASS_DEB020325 = "${var.LINUX_GHACICD_BOT_SSH_KEY_PUB_NOPASS_DEB020325}",
+      LINUX_USERNAME_GHA_CICD_BOT = "${var.LINUX_USERNAME_GHA_CICD_BOT}",
+      LINUX_GHACICD_BOT_SSH_KEY_PUB_NOPASS = "${var.LINUX_GHACICD_BOT_SSH_KEY_PUB_NOPASS}",
     })
 }
 
 
 resource "digitalocean_droplet" "droplet" {
   image     = "debian-12-x64"
-  name      = "${var.LINUX_SERVER_NAME_DEB020325}"
+  name      = "${var.LINUX_SERVER_NAME}"
   region    = local.regions.san_francisco
   size      = local.sizes.nano-plus
   tags      = ["DEB020325", "2025", "portfolio", "terraform", "docker", "debian"]
@@ -123,20 +123,20 @@ output "tf_apply_timestamp" {
   value       = timestamp()
   description = "Timestamp of apply"
 }
-output "LINUX_HUMAN_SSH_KEY_PUB_WITHPASS_DEB020325" {
-  value = "${var.LINUX_HUMAN_SSH_KEY_PUB_WITHPASS_DEB020325}"
+output "LINUX_HUMAN_SSH_KEY_PUB_WITHPASS" {
+  value = "${var.LINUX_HUMAN_SSH_KEY_PUB_WITHPASS}"
 }
-output "LINUX_USERNAME_DEVOPS_HUMAN_DEB020325" {
-  value = "${var.LINUX_USERNAME_DEVOPS_HUMAN_DEB020325}"
+output "LINUX_USERNAME_DEVOPS_HUMAN" {
+  value = "${var.LINUX_USERNAME_DEVOPS_HUMAN}"
 }
-output "LINUX_GHACICD_BOT_SSH_KEY_PUB_NOPASS_DEB020325" {
-  value = "${var.LINUX_GHACICD_BOT_SSH_KEY_PUB_NOPASS_DEB020325}"
+output "LINUX_GHACICD_BOT_SSH_KEY_PUB_NOPASS" {
+  value = "${var.LINUX_GHACICD_BOT_SSH_KEY_PUB_NOPASS}"
 }
-output "LINUX_USERNAME_GHA_CICD_BOT_DEB020325" {
-  value = "${var.LINUX_USERNAME_GHA_CICD_BOT_DEB020325}"
+output "LINUX_USERNAME_GHA_CICD_BOT" {
+  value = "${var.LINUX_USERNAME_GHA_CICD_BOT}"
 }
-output "LINUX_SERVER_NAME_DEB020325" {
-  value = "${var.LINUX_SERVER_NAME_DEB020325}"
+output "LINUX_SERVER_NAME" {
+  value = "${var.LINUX_SERVER_NAME}"
 }
 
 
