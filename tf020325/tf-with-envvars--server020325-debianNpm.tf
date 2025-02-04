@@ -54,12 +54,12 @@ provider "digitalocean" {}
 variable "LINUX_HUMAN_SSH_KEY_PUB_WITHPASS" {
   type = string
   description = "environment variable for Human Developers devops ssh key"
-  default = "blahSshKey"
+  default = "Ssh public key to place on server, so it can verify ssh login by Human Dev User (Human Dev User will have matching private key on laptop)"
 }
 variable "LINUX_USERNAME_DEVOPS_HUMAN" {
   type = string
   description = "environment variable for devops user"
-  default = "blahLinuxUser"
+  default = "Linx User for Human Dev use"
 }
 variable "LINUX_USERPASSWORD_DEVOPS_HUMAN" {
   type = string
@@ -72,12 +72,12 @@ variable "LINUX_USERPASSWORD_DEVOPS_HUMAN" {
 variable "LINUX_USERNAME_GHA_CICD_BOT" {
   type = string
   description = "environment variable for github actions cicd bot user (so it can login to run tasks)"
-  default = "blahLinuxUser"
+  default = "Linx User for CICD Bot use"
 }
 variable "LINUX_GHACICD_BOT_SSH_KEY_PUB_NOPASS" {
   type = string
   description = "environment variable for CICD Runner bots devops ssh key"
-  default = "blahSshKey"
+  default = "Ssh public key to place on server, so it can verify ssh login by CICD Bot (bot will have matching private key in the Github Repos secrets)"
 }
 
 # the SERVER_NAME is not as important to set via env var... but we will go ahead and do it
@@ -144,3 +144,29 @@ output "LINUX_SERVER_NAME" {
 # output "template_file_contents" {
 #   value = data.template_file.my_example_user_data.rendered
 # }
+
+
+variable "VAULT_1P" {
+  type = string
+  description = "vault name for uploading IP address"
+  default = "1pass vault"
+}
+
+variable "ITEM_1P" {
+  type = string
+  description = "vaults item name for uploading IP address"
+  default = "1pass item name (e.g. secure note)"
+}
+
+resource "null_resource" "store_ip_1password" {
+  provisioner "local-exec" {
+    command = <<-EOT
+      op item edit "$TF_VAR_ITEM_1P" --vault "$TF_VAR_VAULT_1P" "LINUX_SERVER_IP[text]=${digitalocean_droplet.droplet.ipv4_address}"
+    EOT
+  }
+
+  # This ensures the script runs every time the IP changes
+  triggers = {
+    ip_address = digitalocean_droplet.droplet.ipv4_address
+  }
+}
