@@ -1,24 +1,26 @@
 # The purpose of this script is to allow a developer to quickly:
-# - run through the process of SSH key setup for use with the terraform project (2 keys-- human dev and cicd bot)
-
-# Keeping it relatively manual, because it might need tweaking
-
+# - run through the process of SSH key setup, plus adding public ssh key to DigitalOcean, Github, & storing it in 1pass
+# Note: files can't yet be CLI auto-uploaded to 1pass, so I typically upload my ssh private key after running this script.
 
 ########## Project Abbreviations   ##########
 ## 1P = 1Password      GH = Github         ##
 ## DO = DigitalOcean                       ##
 #############################################
 
-#### Section: Editable variables: Make sure these are right for your use case.
+#### Section: Editable variables: 
+# Make sure these are right for your use case.
 EMAIL=patrick.wm.meaney@gmail.com
 SSH_KEY_NAME=nopass_GENERAL_TEST_KEY
 
-# 1PASSWORD
+# 1PASSWORD -- Set your Vault, Item (e.g. name of a SecureNote), and Field names here
 VAULT_1P=Z_Tech_ClicksAndCodes
 ITEM_1P="2025 Feb 020325 Debian project"
-# for GH token, give it full access-- that's what I did, though less permissions may work.
+# for DigitalOcean token -- Create one, give it full access-- that's what I did, though less permissions may work.
+# Go here: [DigitalOcean ssh keys dashboard](https://cloud.digitalocean.com/account/security?i=16c58b)
 FIELD_1P_DO_TOKEN=DO_TOKEN_ALL_PERMISSIONS_020325
-# for GH PAT token, give it repo (all), read:org, and admin:publickey permissions in classic token mode
+
+# for Github Personal Access Token (Classic) -- give it repo (all), read:org, and admin:publickey permissions in classic token mode
+# Go here: [Github ssh keys dashboard](https://github.com/settings/keys)
 FIELD_1P_GH_TOKEN=GH_PAT_repo_read-org_admin-publickey
 
 #### Section: Other variables
@@ -76,8 +78,6 @@ doctl compute ssh-key create ${SSH_KEY_NAME_WITH_DATE} --public-key "$(cat ${SSH
 echo "Uploading ssh public key to Github via GH CLI"
 gh ssh-key add ${SSH_KEY_FILE_PUBKEY_PATH} -t "${SSH_KEY_NAME_WITH_DATE}"
 
-
-## NEW TO THE SCRIPT-- FIX THIS PART
 # Check if the item exists in the vault
 if op item get "$ITEM_TITLE" --vault "$VAULT" &>/dev/null; then
     echo "Item '$ITEM_TITLE' exists in vault '$VAULT'. Public keys will be updated."
