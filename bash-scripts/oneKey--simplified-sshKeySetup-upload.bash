@@ -124,7 +124,6 @@ doctl compute ssh-key create ${SSH_KEY_NAME_WITH_DATE} --public-key "$(cat ${SSH
 echo "Uploading ssh public key to Github via GH CLI"
 gh ssh-key add ${SSH_KEY_FILE_PUBKEY_PATH} -t "${SSH_KEY_NAME_WITH_DATE}"
 
-## 1Password Integration Section
-
+## add field for ssh pub key, along with the value of ssh pub key to 1password
 op item edit "${ITEM_1P}" --vault "${VAULT_1P}" \
-    "${SSH_KEY_PUBKEY_FILENAME}[text]=$(cat ${SSH_KEY_FILE_PUBKEY_PATH})" \
+    "${SSH_KEY_PUBKEY_FILENAME}[text]=$(cat ${SSH_KEY_FILE_PUBKEY_PATH})"
