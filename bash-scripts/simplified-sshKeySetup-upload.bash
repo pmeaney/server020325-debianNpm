@@ -1,7 +1,6 @@
 # The purpose of this script is to allow a developer to quickly:
-# - run through the process of SSH key setup, plus adding public ssh key to DigitalOcean, Github, & storing it in 1pass
+# - run through the process of SSH key setup, plus adding public ssh key to DigitalOcean, Github, & storing it in 1password
 # Note: files can't yet be CLI auto-uploaded to 1pass, so I typically upload my ssh private key after running this script.
-
 
 ########## Project Abbreviations   ##########
 ## 1P = 1Password      GH = Github         ##
@@ -14,11 +13,11 @@
 ###   3. Visit DO & GH and create tokens
 # for DigitalOcean token -- Create one, give it full access-- that's what I did, though less permissions may work.
 # Go here: [DigitalOcean ssh keys dashboard](https://cloud.digitalocean.com/account/security?i=16c58b)
-# Create field "FIELD_1P_DO_TOKEN" and give add paste the token into it
+# Create field "FIELD_1P_DO_TOKEN" and paste the token into it.
 
 ###   4.for Github Personal Access Token (Classic) -- give it repo (all), read:org, and admin:publickey permissions in classic token mode
 # Go here: [Github ssh keys dashboard](https://github.com/settings/keys)
-# Create field "FIELD_1P_GH_TOKEN" and give add paste the token into it
+# Create field "FIELD_1P_GH_TOKEN" and paste the token into it.
 #
 # Everything else is setup for you, to create an ssh key, and auto-upload it to DO, GH, 1P.
 ################################################################################################
