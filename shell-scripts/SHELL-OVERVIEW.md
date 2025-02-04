@@ -12,6 +12,24 @@ Here's what we'll eventually have.
 
 ## Automated steps:
 
+### Step 0: Set Presets file
+
+Initially, Prompt the user to ask if they want to auto-gen a presets file
+('1pass-presets.yml') containing their preferred Vault & SecureNote name.
+If one doesnt exist, create it.
+if it exists check if the fields exist, ask if we want to use them, without recreating
+if the fields dont exist, ask to create them
+
+In the next step, before asking if they want to use existing or create new 1pass vault & secure note... first, ask ift hey want to use presets.
+
+preset file's fields:
+vaultname
+secureNoteName
+emailaddress (for ssh keys)
+devops-username
+cicdbot-username
+server-name
+
 ### Step 1: Token & 1pass setup
 
 - You run ex1.bash (ex1 = example1. working name.)
@@ -47,8 +65,14 @@ We also want to import to 1pass the output from terraform (IP address).
 - For more info on how ssh keys are used in this project, see [./docs/GUIDE-SSH-KEY-SETUP.md](./docs/GUIDE-SSH-KEY-SETUP.md)
 - General: DO token, & name to give server
   export DIGITALOCEAN_ACCESS_TOKEN=$(op item get "2025 Feb 020325 Debian project" --fields label=TF_VAR_DIGITAL_OCEAN_TOKEN_DEB020325) &&
+  for DIGITALOCEAN_ACCESS_TOKEN... can we create is automatically (now that we CLI logged into DO w/ admin DO key in the first phase of the script)
+
+- We'll prompt the user for some of them
+- Others, we'll generate based on presets
+  - 2 ssh keys: Human developer & CICD bot (cicd bot we won't use now, but for simplicity we'll add them into the server. (the pub key, which the server uses to verify ssh logins from its end))
 
 ```bash
+
 export DIGITALOCEAN_ACCESS_TOKEN=$(op item get "2025 Feb 020325 Debian project" --fields label=TF_VAR_DIGITAL_OCEAN_TOKEN_DEB020325) &&
 export TF_VAR_LINUX_SERVER_NAME_DEB020325=$(op item get "2025 Feb 020325 Debian project" --fields label=LINUX_SERVER_NAME_DEB020325) &&
 
