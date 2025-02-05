@@ -2,6 +2,18 @@ For the Shell Environment variables we'll be exporting into our shell,
 We give them this convention in the tf & tf-cloud-config.yml script:
 `LINUX_<ENTITY>_<ATTRIBUTE>` (Linux is just a reminder that its for our Debian Linux server)
 
+We'll also need to create one called `LINUX_SERVER_IPADDRESS` in vault, since 1pass will insert our server's IP there.
+
+So, these are the items we'll have in 1pass:
+`DIGITALOCEAN_TOKEN` - a DO Token with full access. Must be exported to shell env as a var named `DIGITALOCEAN_TOKEN` for the TF DigitalOcean Provider to recognize it.
+`LINUX_HUMAN_SSHKEY` - public ssh key for human ssh user. So we can log into the server tf creates.
+`LINUX_HUMAN_USERNAME` - username for human user's ssh login session
+`LINUX_HUMAN_USERPASS` - password for human ssh user. I think DO requires a pw-protected ssh key for at least one user, though I could be wrong.
+`LINUX_CICDGHA_USERNAME` - username for CICD Runner's ssh login session
+`LINUX_CICDGHA_SSHKEY` - public ssh key for CICD Runner. Eventually we'll add the corresponding private key to a github repo so the CICD Runner can login.
+`LINUX_SERVER_NAME` - name it whatever you'd want to see in the DigitalOcean Droplets Dashboard
+`LINUX_SERVER_IPADDRESS` - leave empty (TF will run a 1pass CLI command to update it with our servers IP address)
+
 Additionally:
 
 - We must set "DIGITALOCEAN_TOKEN" to the value of a DO Token as the ["Digital Ocean Provider" docs page](https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs#argument-reference) mentions:

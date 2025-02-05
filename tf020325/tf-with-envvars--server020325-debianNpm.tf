@@ -89,7 +89,7 @@ variable "LINUX_SERVER_NAME" {
 }
 
 data "template_file" "my_example_user_data" {
-  template = templatefile("./yamlScripts/with-envVars.yaml",
+  template = templatefile("./ymlScripts/tf-cloud-config.yml",
     {
       # For dev login
       LINUX_HUMAN_USERNAME = "${var.LINUX_HUMAN_USERNAME}",
