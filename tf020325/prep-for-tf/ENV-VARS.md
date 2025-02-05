@@ -4,31 +4,30 @@ Here are the Shell environment variables you need to set based on both the Terra
 
 So, run `env` from a shell, and if these are set... you've done it right.
 
-First, generate s ssh keys.
-
-First, add these env vars which will be used to automate things.
+Note: This is setup for my own usage.
+You'll need to edit some of these items-- mostly the values of the variables at the top.
 
 ```bash
-EMAIL=patrick.wm.meaney@gmail.com
-SSH_KEY_NAME_HUMAN_NOPASS=withpass_DO_TF_HUMAN_PUB_SSH_KEY
-SSH_KEY_NAME_CICDBOT_NOPASS=nopass_GHACICD_BOT_PUB_SSH_KEY
+export EMAIL=patrick.wm.meaney@gmail.com
+export SSH_KEY_NAME_HUMAN_NOPASS=withpass_DO_TF_HUMAN_PUB_SSH_KEY
+export SSH_KEY_NAME_CICDBOT_NOPASS=nopass_GHACICD_BOT_PUB_SSH_KEY
 
 # 1PASSWORD
-VAULT_1P=Z_Tech_ClicksAndCodes
-ITEM_1P="2025 Feb 020325 Debian project"
-FIELD_1P_DO_TOKEN=DO_TOKEN_ALL_PERMISSIONS_020325
-FIELD_1P_GH_TOKEN=GH_PAT_repo_read-org_admin-publickey
+export VAULT_1P=Z_Tech_ClicksAndCodes
+export ITEM_1P="2025 Feb 020325 Debian project"
+export FIELD_1P_DO_TOKEN=DO_TOKEN_ALL_PERMISSIONS_020325
+export FIELD_1P_GH_TOKEN=GH_PAT_repo_read-org_admin-publickey
 
 # Generate the keys
-ssh-keygen -t ed25519 -C "${EMAIL}" -f "~/.ssh/id_ed25519_${SSH_KEY_NAME_HUMAN_NOPASS}" -N ""
-ssh-keygen -t ed25519 -C "${EMAIL}" -f "~/.ssh/id_ed25519_${SSH_KEY_NAME_CICDBOT_NOPASS}" -N ""
+ssh-keygen -t ed25519 -C "${EMAIL}" -f ~/.ssh/id_ed25519_${SSH_KEY_NAME_HUMAN_NOPASS} -N ""
+ssh-keygen -t ed25519 -C "${EMAIL}" -f ~/.ssh/id_ed25519_${SSH_KEY_NAME_CICDBOT_NOPASS} -N ""
 # Add them to ssh agent (priv key filepath)
-ssh-add "~/.ssh/id_ed25519_${SSH_KEY_NAME_HUMAN_NOPASS}"
-ssh-add "~/.ssh/id_ed25519_${SSH_KEY_NAME_CICDBOT_NOPASS}"
+ssh-add ~/.ssh/id_ed25519_${SSH_KEY_NAME_HUMAN_NOPASS}
+ssh-add ~/.ssh/id_ed25519_${SSH_KEY_NAME_CICDBOT_NOPASS}
 
 # Add them to ssh-config file
-echo "Adding key to ssh config file"
 cat << EOF >> ~/.ssh/config
+
 # New key -- from shell script -- for human dev user
 Host github.com-humanuser
     HostName ssh.github.com
@@ -41,6 +40,7 @@ Host github.com-cicdbot
     User git
     Port 443
     IdentityFile ~/.ssh/id_ed25519_${SSH_KEY_NAME_CICDBOT_NOPASS}
+
 EOF
 
 # cmd to output GH Token
@@ -51,8 +51,8 @@ EOF
 
 # Log into GH with token (so we can auto-upload the 2 ssh keys to GH)
 echo "$(op item get "${ITEM_1P}" --vault "${VAULT_1P}" --field "${FIELD_1P_GH_TOKEN}")" | gh auth login --with-token
-gh ssh-key add "~/.ssh/id_ed25519_${SSH_KEY_NAME_HUMAN_NOPASS}.pub" -t "${SSH_KEY_NAME_HUMAN_NOPASS}"
-gh ssh-key add "~/.ssh/id_ed25519_${SSH_KEY_NAME_CICDBOT_NOPASS}.pub" -t "${SSH_KEY_NAME_CICDBOT_NOPASS}"
+gh ssh-key add ~/.ssh/id_ed25519_${SSH_KEY_NAME_HUMAN_NOPASS}.pub -t "${SSH_KEY_NAME_HUMAN_NOPASS}"
+gh ssh-key add ~/.ssh/id_ed25519_${SSH_KEY_NAME_CICDBOT_NOPASS}.pub -t "${SSH_KEY_NAME_CICDBOT_NOPASS}"
 
 # Log into DO with token (so we can auto-upload the 2 ssh keys to DO)
 doctl auth init --context default --access-token "$(op item get "${ITEM_1P}" --vault "${VAULT_1P}" --field "${FIELD_1P_DO_TOKEN}")"
@@ -69,7 +69,7 @@ doctl compute ssh-key create "${SSH_KEY_NAME_HUMAN_NOPASS}" --public-key "$(cat 
 # Let's set up the rest of the shell env vars.
 
 # 1PASSWORD
-export DIGITAL_OCEAN_TOKEN=$(op item get ${ITEM_1P} --fields label=DIGITAL_OCEAN_TOKEN)
+export DIGITALOCEAN_ACCESS_TOKEN=$(op item get ${ITEM_1P} --fields label=DIGITALOCEAN_ACCESS_TOKEN)
 export TF_VAR_LINUX_SERVER_NAME=$(op item get ${ITEM_1P} --fields label=LINUX_SERVER_NAME)
 export TF_VAR_LINUX_USERNAME_DEVOPS_HUMAN=$(op item get ${ITEM_1P} --fields label=LINUX_USERNAME_DEVOPS_HUMAN)
 export TF_VAR_LINUX_HUMAN_SSH_KEY_PUB_NOPASS=$(op item get ${ITEM_1P} --fields label=id_ed25519_nopass_DO_TF_HUMAN_PUB_SSH_KEY)
@@ -77,6 +77,7 @@ export TF_VAR_LINUX_USERNAME_GHA_CICD_BOT=$(op item get ${ITEM_1P} --fields labe
 export TF_VAR_LINUX_GHACICD_BOT_SSH_KEY_PUB_NOPASS=$(op item get ${ITEM_1P} --fields label=id_ed25519_nopass_GHACICD_BOT_PUB_SSH_KEY)
 export TF_VAR_VAULT_1P=$(op item get "2025 Feb 020325 Debian project" --fields label=VAULT_1P)
 export TF_VAR_ITEM_1P=$(op item get "2025 Feb 020325 Debian project" --fields label=ITEM_1P)
+
 ```
 
 ```bash
@@ -119,7 +120,7 @@ To return to fix or add in--------------
 #       VERIFY
 #
 
-export DIGITAL_OCEAN_TOKEN=$(op item get "2025 Feb 020325 Debian project" --fields label=DIGITAL_OCEAN_TOKEN) &&
+export DIGITALOCEAN_ACCESS_TOKEN=$(op item get "2025 Feb 020325 Debian project" --fields label=DIGITALOCEAN_ACCESS_TOKEN) &&
 export TF_VAR_LINUX_SERVER_NAME=$(op item get "2025 Feb 020325 Debian project" --fields label=LINUX_SERVER_NAME) &&
 # Human user secrets: ssh pub key, ssh user, ssh pw
 export TF_VAR_LINUX_HUMAN_SSH_KEY_PUB_NOPASS=$(op item get "2025 Feb 020325 Debian project" --fields label=id_ed25519_withpass_DO_TF_HUMAN_PUB_SSH_KEY) &&
