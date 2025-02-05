@@ -19,7 +19,20 @@ In more detail:
 
 - Add your ssh key via Account > Settings > Ssh & Gpg keys
 - Run: `ssh -T git@github.com` to test the ssh connection.
--
+- If you added an ssh key to Github, and want to check the fingerprint sh own on Github matches the one you expect it to me, you can run: `ssh-keygen -l -f ~/.ssh/id_ed25519_someKeyName`
+
+- ssh key gen
+- ssh add key to agent
+- add key to github (do manually)
+- add key to digital ocean server (happens via TF)
+
+# copy key to server (or use TF to do so, which is what we do in the project)
+
+ssh-copy-id -i ~/.ssh/key-filename.pub -p port# 'username@server.com'
+
+# login
+
+ssh -i ~/.ssh/key-filename -p port# 'username@server.com'
 
 ## DigitalOcean
 
@@ -39,4 +52,55 @@ Now you're ready to use that same ssh key via Terraform-- where, we're basically
 
 ```bash
 ssh-keygen -t ed25519 -C "your.email@example.com" -f ~/.ssh/id_ed25519_gh_do_humanuser_020525
+```
+
+When sshing in, we have two options for specifying which key to use.
+
+Simplest approach - specify the key
+`ssh -i /path/to/your/private_key username@server_ip`
+
+Better approach - configure SSH config file.
+Once your user
+
+`nano ~/.ssh/config`
+Add this to your SSH config (replace ${LINUX_HUMAN_USERNAME} with your user's username):
+
+For example, let's go with "deb" short for debian. The actual servername on DO is "server020525-debianNpm". but "ssh deb" is all we'll need to run in the CLI.
+
+```bash
+Host your-server-nickname
+    HostName your-server-ip
+    User ${LINUX_HUMAN_USERNAME}
+    IdentityFile ~/.ssh/your_private_key
+
+# For example
+Host deb
+    HostName your-server-ip
+    User patDevOpsUser
+    IdentityFile ~/.ssh/id_ed25519_gh_do_humanuser_020525
+
+
+# The Host * with no HostName specified means "use these settings for any host I try to SSH to". This will make SSH use your specified key when connecting to any server, including both GitHub (for git operations) and your DigitalOcean droplets.
+# A common practice is to put this as the last entry in your config file, so you can still override it with specific configurations if needed in the future:
+
+# Specific overrides could go here
+Host my-special-server
+    IdentityFile ~/.ssh/special_key
+
+# Default for everything else
+Host *
+    IdentityFile ~/.ssh/special_key
+
+#########
+# So I might use this-- (I'll update your-server-ip once tf generates the server)
+Host deb
+    HostName your-server-ip
+    User patDevOpsUser
+    IdentityFile ~/.ssh/id_ed25519_gh_do_humanuser_020525
+
+# Default for everything else
+Host *
+    IdentityFile ~/.ssh/id_ed25519_gh_do_humanuser_020525
+
+
 ```
