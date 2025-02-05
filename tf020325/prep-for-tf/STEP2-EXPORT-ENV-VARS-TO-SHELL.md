@@ -36,7 +36,6 @@ ITEM_1P="2025 Feb 020325 Debian project"
 export DIGITALOCEAN_ACCESS_TOKEN=$(op item get ${ITEM_1P} --fields label=DIGITALOCEAN_ACCESS_TOKEN)
 export TF_VAR_LINUX_SERVER_NAME=$(op item get ${ITEM_1P} --fields label=LINUX_SERVER_NAME)
 export TF_VAR_LINUX_USERNAME_DEVOPS_HUMAN=$(op item get ${ITEM_1P} --fields label=LINUX_USERNAME_DEVOPS_HUMAN)
-export TF_VAR_LINUX_HUMAN_SSH_KEY_PUB_WITHPASS=$(op item get ${ITEM_1P} --fields label=LINUX_HUMAN_SSH_KEY_PUB_WITHPASS)
 export TF_VAR_LINUX_HUMAN_SSH_KEY_PUB_WITHPASS=$(op item get ${ITEM_1P} --fields label=id_ed25519_withpass_DO_TF_HUMAN_PUB_SSH_KEY)
 export TF_VAR_LINUX_USERNAME_GHA_CICD_BOT=$(op item get ${ITEM_1P} --fields label=LINUX_USERNAME_GHA_CICD_BOT)
 export TF_VAR_LINUX_GHACICD_BOT_SSH_KEY_PUB_NOPASS=$(op item get ${ITEM_1P} --fields label=id_ed25519_nopass_GHACICD_BOT_PUB_SSH_KEY)
