@@ -106,7 +106,7 @@ resource "digitalocean_droplet" "droplet" {
   name      = "${var.LINUX_SERVER_NAME}"
   region    = local.regions.san_francisco
   size      = local.sizes.nano-plus
-  tags      = ["Feb 2025", "2025", "portfolio", "terraform", "docker", "debian"]
+  tags      = ["Feb-2025", "020525", "portfolio", "terraform", "docker", "debian"]
   user_data = data.template_file.my_example_user_data.rendered
 }
 
