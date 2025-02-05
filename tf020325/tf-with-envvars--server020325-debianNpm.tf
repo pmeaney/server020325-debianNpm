@@ -51,7 +51,7 @@ provider "digitalocean" {}
 
 ###############################################
 ### Env vars Section -- Human users
-variable "LINUX_HUMAN_SSH_KEY_PUB_WITHPASS" {
+variable "LINUX_HUMAN_SSH_KEY_PUB_NOPASS" {
   type = string
   description = "environment variable for Human Developers devops ssh key"
   default = "Ssh public key to place on server, so it can verify ssh login by Human Dev User (Human Dev User will have matching private key on laptop)"
@@ -60,11 +60,6 @@ variable "LINUX_USERNAME_DEVOPS_HUMAN" {
   type = string
   description = "environment variable for devops user"
   default = "Linx User for Human Dev use"
-}
-variable "LINUX_USERPASSWORD_DEVOPS_HUMAN" {
-  type = string
-  description = "environment variable for devops users password"
-  default = "blahLinuxUserPassword"
 }
 
 ### Env vars Section -- GHA Cicd bot
@@ -92,9 +87,7 @@ data "template_file" "my_example_user_data" {
     {
       # For dev login
       LINUX_USERNAME_DEVOPS_HUMAN = "${var.LINUX_USERNAME_DEVOPS_HUMAN}",
-      LINUX_USERPASSWORD_DEVOPS_HUMAN = "${var.LINUX_USERPASSWORD_DEVOPS_HUMAN}",
-      LINUX_HUMAN_SSH_KEY_PUB_WITHPASS = "${var.LINUX_HUMAN_SSH_KEY_PUB_WITHPASS}",
-
+      LINUX_HUMAN_SSH_KEY_PUB_NOPASS = "${var.LINUX_HUMAN_SSH_KEY_PUB_NOPASS}",
       # For Github Actions ("GHA") CICD bot to log in.  no pass item b/c the ssh key has no pass-- the ssh key is only for cicd bot
       LINUX_USERNAME_GHA_CICD_BOT = "${var.LINUX_USERNAME_GHA_CICD_BOT}",
       LINUX_GHACICD_BOT_SSH_KEY_PUB_NOPASS = "${var.LINUX_GHACICD_BOT_SSH_KEY_PUB_NOPASS}",
@@ -123,8 +116,8 @@ output "tf_apply_timestamp" {
   value       = timestamp()
   description = "Timestamp of apply"
 }
-output "LINUX_HUMAN_SSH_KEY_PUB_WITHPASS" {
-  value = "${var.LINUX_HUMAN_SSH_KEY_PUB_WITHPASS}"
+output "LINUX_HUMAN_SSH_KEY_PUB_NOPASS" {
+  value = "${var.LINUX_HUMAN_SSH_KEY_PUB_NOPASS}"
 }
 output "LINUX_USERNAME_DEVOPS_HUMAN" {
   value = "${var.LINUX_USERNAME_DEVOPS_HUMAN}"
