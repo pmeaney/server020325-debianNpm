@@ -1,6 +1,10 @@
+# SSH Troubleshooting
+
 If you have issues with ssh, here are some troubleshooting ideas.
 
-Prior to starting a new workflow... or returning to an old one after a while away, it's good to get an overview of what is happening between our ssh key on our laptop, vs. services like Github & DigitalOcean, which we access via ssh.
+- First rule of ssh-ing from public places:
+  - **Do not trust library wifi networks to allow port 22 access!** - A Little story: I setup a server from a cafe & ssh access worked. Then went to a library. Ssh access seemed to work initially, then at some point it quit. I thought I introduced a bug, and it was tough to debug. I noticed that my cicd runner still had ssh access to my DO Server, but not my laptop. Strange... Eventually I realized tried to trace the ssh port issue to the source and realized it was probably the library's network itself. So, I moved to a cafe and suddenly ssh (port 22) worked again. (Prior to leaving the library though, I changed my ~/.ssh/config file to use port 443 for github (instead of the default 22)-- and that worked.) Problem solved. -
+    Prior to starting a new workflow... or returning to an old one after a while away, it's good to get an overview of what is happening between our ssh key on our laptop, vs. services like Github & DigitalOcean, which we access via ssh.
 
 ## Why we need ssh keys & how they work
 
