@@ -13,15 +13,15 @@ users:
     lock_passwd: false
     ssh_authorized_keys: ${LINUX_SSH_KEY_WITHPASS_HUMAN}
 
-  - name: ${LINUX_USERNAME_GHA_CICD_BOT}
-    gecos: GitHub Actions CI/CD Bot - ${LINUX_USERNAME_GHA_CICD_BOT}
+  - name: ${LINUX_USERNAME_CICDBOT_GHA}
+    gecos: GitHub Actions CI/CD Bot - ${LINUX_USERNAME_CICDBOT_GHA}
     shell: /bin/bash
-    primary_group: ${LINUX_USERNAME_GHA_CICD_BOT}
+    primary_group: ${LINUX_USERNAME_CICDBOT_GHA}
     # gives passwordless sudo access specifically to docker and docker-compose commands
     sudo: ALL=(ALL) NOPASSWD:/usr/bin/docker,/usr/bin/docker-compose
     groups: docker
     lock_passwd: true
-    ssh_authorized_keys: ${LINUX_SSH_KEY_NOPASS_CICDBOT}
+    ssh_authorized_keys: ${LINUX_SSH_KEY_NOPASS_CICDBOT_GHA}
 
 chpasswd:
   expire: false

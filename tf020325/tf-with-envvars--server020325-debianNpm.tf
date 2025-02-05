@@ -70,12 +70,12 @@ variable "LINUX_USERPASSWORD_HUMAN" {
 
 ### Env vars Section -- GHA Cicd bot
 
-variable "LINUX_USERNAME_GHA_CICD_BOT" {
+variable "LINUX_USERNAME_CICDBOT_GHA" {
   type = string
   description = "environment variable for github actions cicd bot user (so it can login to run tasks)"
   default = "Linx User for CICD Bot use"
 }
-variable "LINUX_SSH_KEY_NOPASS_CICDBOT" {
+variable "LINUX_SSH_KEY_NOPASS_CICDBOT_GHA" {
   type = string
   description = "environment variable for CICD Runner bots devops ssh key"
   default = "Ssh public key to place on server, so it can verify ssh login by CICD Bot (bot will have matching private key in the Github Repos secrets)"
@@ -96,11 +96,10 @@ data "template_file" "my_example_user_data" {
       LINUX_SSH_KEY_WITHPASS_HUMAN = "${var.LINUX_SSH_KEY_WITHPASS_HUMAN}",
       LINUX_USERPASSWORD_HUMAN = "${var.LINUX_USERPASSWORD_HUMAN}"
       # For Github Actions ("GHA") CICD bot to log in.  no pass item b/c the ssh key has no pass-- the ssh key is only for cicd bot
-      LINUX_USERNAME_GHA_CICD_BOT = "${var.LINUX_USERNAME_GHA_CICD_BOT}",
-      LINUX_SSH_KEY_NOPASS_CICDBOT = "${var.LINUX_SSH_KEY_NOPASS_CICDBOT}",
+      LINUX_USERNAME_CICDBOT_GHA = "${var.LINUX_USERNAME_CICDBOT_GHA}",
+      LINUX_SSH_KEY_NOPASS_CICDBOT_GHA = "${var.LINUX_SSH_KEY_NOPASS_CICDBOT_GHA}",
     })
 }
-
 
 resource "digitalocean_droplet" "droplet" {
   image     = "debian-12-x64"
@@ -130,11 +129,11 @@ output "LINUX_USERNAME_HUMAN" {
   value = "${var.LINUX_USERNAME_HUMAN}"
 }
 
-output "LINUX_SSH_KEY_NOPASS_CICDBOT" {
-  value = "${var.LINUX_SSH_KEY_NOPASS_CICDBOT}"
+output "LINUX_SSH_KEY_NOPASS_CICDBOT_GHA" {
+  value = "${var.LINUX_SSH_KEY_NOPASS_CICDBOT_GHA}"
 }
-output "LINUX_USERNAME_GHA_CICD_BOT" {
-  value = "${var.LINUX_USERNAME_GHA_CICD_BOT}"
+output "LINUX_USERNAME_CICDBOT_GHA" {
+  value = "${var.LINUX_USERNAME_CICDBOT_GHA}"
 }
 output "LINUX_SERVER_NAME" {
   value = "${var.LINUX_SERVER_NAME}"
