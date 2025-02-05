@@ -14,7 +14,7 @@ Then, clone the project.
 
 Then, run the commands in these files (be sure to tailor the first one to your use case):
 
-- [Step 1: Ssh Key Setup](./tf020325/prep-for-tf/STEP-1-SSH-KEY-SETUP.md')
+- [Step 1: Ssh Key Setup](./tf020325/prep-for-tf/STEP1-SSH-KEY-SETUP.md')
 - [Step 2: Export env vars to shell env](./tf020325/prep-for-tf/STEP2-EXPORT-ENV-VARS-TO-SHELL.md')
 
 Then you should be ready to apply the terraform file located in `./tf020325` to setup the server, and ssh in.

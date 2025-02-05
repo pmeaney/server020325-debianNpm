@@ -43,7 +43,7 @@ The script below handles the key generation and distribution automatically.
 
 ```bash
 export EMAIL=patrick.wm.meaney@gmail.com
-export SSH_KEY_NAME_HUMAN_NOPASS=withpass_DO_TF_HUMAN_PUB_SSH_KEY
+export SSH_KEY_NAME_HUMAN_NOPASS=nopass_DO_TF_HUMAN_PUB_SSH_KEY
 export SSH_KEY_NAME_CICDBOT_NOPASS=nopass_GHACICD_BOT_PUB_SSH_KEY
 
 # 1PASSWORD
@@ -76,6 +76,11 @@ Host github.com-cicdbot
     IdentityFile ~/.ssh/id_ed25519_${SSH_KEY_NAME_CICDBOT_NOPASS}
 
 EOF
+
+# Add the 2 ssh pub keys to 1password
+op item edit "$ITEM_1P" --vault "$VAULT_1P" \
+       "id_ed25519_nopass_GHACICD_BOT_PUB_SSH_KEY[text]=$(cat ~/.ssh/id_ed25519_nopass_GHACICD_BOT_PUB_SSH_KEY.pub)" \
+       "id_ed25519_nopass_DO_TF_HUMAN_PUB_SSH_KEY[text]=$(cat ~/.ssh/id_ed25519_nopass_DO_TF_HUMAN_PUB_SSH_KEY.pub)"
 
 # cmd to output GH Token
 # op item get "${ITEM_1P}" --vault "${VAULT_1P}" --field "${FIELD_1P_GH_TOKEN}"

@@ -8,4 +8,4 @@ terraform.tfstate.*
 # Ignore Terraform working directory
 .terraform/
 
-.DS_Store
+**/.DS_Store
