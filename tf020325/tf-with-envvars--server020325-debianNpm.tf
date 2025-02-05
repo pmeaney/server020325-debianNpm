@@ -51,18 +51,18 @@ provider "digitalocean" {}
 
 ###############################################
 ### Env vars Section -- Human users
-variable "LINUX_SSH_KEY_WITHPASS_HUMAN" {
+variable "LINUX_HUMAN_SSHKEY" {
   type = string
   description = "environment variable for Human Developers devops ssh key"
   default = "Ssh public key to place on server, so it can verify ssh login by Human Dev User (Human Dev User will have matching private key on laptop)"
 }
-variable "LINUX_USERNAME_HUMAN" {
+variable "LINUX_HUMAN_USERNAME" {
   type = string
   description = "environment variable for devops user"
   default = "Linx User for Human Dev use"
 }
 
-variable "LINUX_USERPASSWORD_HUMAN" {
+variable "LINUX_HUMAN_USERPASS" {
   type = string
   description = "environment variable for devops user password"
   default = "Linx User Password for Human Dev use -- for logging into server via SSH"
@@ -70,12 +70,12 @@ variable "LINUX_USERPASSWORD_HUMAN" {
 
 ### Env vars Section -- GHA Cicd bot
 
-variable "LINUX_USERNAME_CICDBOT_GHA" {
+variable "LINUX_CICDGHA_USERNAME" {
   type = string
   description = "environment variable for github actions cicd bot user (so it can login to run tasks)"
   default = "Linx User for CICD Bot use"
 }
-variable "LINUX_SSH_KEY_NOPASS_CICDBOT_GHA" {
+variable "LINUX_CICDGHA_SSHKEY" {
   type = string
   description = "environment variable for CICD Runner bots devops ssh key"
   default = "Ssh public key to place on server, so it can verify ssh login by CICD Bot (bot will have matching private key in the Github Repos secrets)"
@@ -92,12 +92,12 @@ data "template_file" "my_example_user_data" {
   template = templatefile("./yamlScripts/with-envVars.yaml",
     {
       # For dev login
-      LINUX_USERNAME_HUMAN = "${var.LINUX_USERNAME_HUMAN}",
-      LINUX_SSH_KEY_WITHPASS_HUMAN = "${var.LINUX_SSH_KEY_WITHPASS_HUMAN}",
-      LINUX_USERPASSWORD_HUMAN = "${var.LINUX_USERPASSWORD_HUMAN}"
+      LINUX_HUMAN_USERNAME = "${var.LINUX_HUMAN_USERNAME}",
+      LINUX_HUMAN_USERPASS = "${var.LINUX_HUMAN_USERPASS}"
+      LINUX_HUMAN_SSHKEY = "${var.LINUX_HUMAN_SSHKEY}",
       # For Github Actions ("GHA") CICD bot to log in.  no pass item b/c the ssh key has no pass-- the ssh key is only for cicd bot
-      LINUX_USERNAME_CICDBOT_GHA = "${var.LINUX_USERNAME_CICDBOT_GHA}",
-      LINUX_SSH_KEY_NOPASS_CICDBOT_GHA = "${var.LINUX_SSH_KEY_NOPASS_CICDBOT_GHA}",
+      LINUX_CICDGHA_USERNAME = "${var.LINUX_CICDGHA_USERNAME}",
+      LINUX_CICDGHA_SSHKEY = "${var.LINUX_CICDGHA_SSHKEY}",
     })
 }
 
@@ -122,18 +122,18 @@ output "tf_apply_timestamp" {
   value       = timestamp()
   description = "Timestamp of apply"
 }
-output "LINUX_SSH_KEY_WITHPASS_HUMAN" {
-  value = "${var.LINUX_SSH_KEY_WITHPASS_HUMAN}"
+output "LINUX_HUMAN_SSHKEY" {
+  value = "${var.LINUX_HUMAN_SSHKEY}"
 }
-output "LINUX_USERNAME_HUMAN" {
-  value = "${var.LINUX_USERNAME_HUMAN}"
+output "LINUX_HUMAN_USERNAME" {
+  value = "${var.LINUX_HUMAN_USERNAME}"
 }
 
-output "LINUX_SSH_KEY_NOPASS_CICDBOT_GHA" {
-  value = "${var.LINUX_SSH_KEY_NOPASS_CICDBOT_GHA}"
+output "LINUX_CICDGHA_SSHKEY" {
+  value = "${var.LINUX_CICDGHA_SSHKEY}"
 }
-output "LINUX_USERNAME_CICDBOT_GHA" {
-  value = "${var.LINUX_USERNAME_CICDBOT_GHA}"
+output "LINUX_CICDGHA_USERNAME" {
+  value = "${var.LINUX_CICDGHA_USERNAME}"
 }
 output "LINUX_SERVER_NAME" {
   value = "${var.LINUX_SERVER_NAME}"

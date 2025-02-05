@@ -4,30 +4,30 @@ groups:
 
 users:
   - default
-  - name: ${LINUX_USERNAME_HUMAN}
-    gecos: Human Developer User - ${LINUX_USERNAME_HUMAN}
+  - name: ${LINUX_HUMAN_USERNAME}
+    gecos: Human Developer User - ${LINUX_HUMAN_USERNAME}
     shell: /bin/bash
-    primary_group: ${LINUX_USERNAME_HUMAN}
+    primary_group: ${LINUX_HUMAN_USERNAME}
     sudo: ALL=(ALL) NOPASSWD:ALL
     groups: users, admin, docker
     lock_passwd: false
-    ssh_authorized_keys: ${LINUX_SSH_KEY_WITHPASS_HUMAN}
+    ssh_authorized_keys: ${LINUX_HUMAN_SSHKEY}
 
-  - name: ${LINUX_USERNAME_CICDBOT_GHA}
-    gecos: GitHub Actions CI/CD Bot - ${LINUX_USERNAME_CICDBOT_GHA}
+  - name: ${LINUX_CICDGHA_USERNAME}
+    gecos: GitHub Actions CI/CD Bot - ${LINUX_CICDGHA_USERNAME}
     shell: /bin/bash
-    primary_group: ${LINUX_USERNAME_CICDBOT_GHA}
+    primary_group: ${LINUX_CICDGHA_USERNAME}
     # gives passwordless sudo access specifically to docker and docker-compose commands
     sudo: ALL=(ALL) NOPASSWD:/usr/bin/docker,/usr/bin/docker-compose
     groups: docker
     lock_passwd: true
-    ssh_authorized_keys: ${LINUX_SSH_KEY_NOPASS_CICDBOT_GHA}
+    ssh_authorized_keys: ${LINUX_CICDGHA_SSHKEY}
 
 chpasswd:
   expire: false
   users:
-    - name: ${LINUX_USERNAME_HUMAN}
-      password: ${LINUX_USERPASSWORD_HUMAN}
+    - name: ${LINUX_HUMAN_USERNAME}
+      password: ${LINUX_HUMAN_USERPASS}
       type: text
 
 package_update: true
@@ -44,6 +44,6 @@ runcmd:
   # Install Docker using the official script
   - curl -fsSL https://get.docker.com -o get-docker.sh
   - sh get-docker.sh
-  - sudo usermod -aG docker ${LINUX_USERNAME_HUMAN}
+  - sudo usermod -aG docker ${LINUX_HUMAN_USERNAME}
   # Install rsync with error handling
   - sudo apt-get install -y rsync || echo "Failed to install rsync"
