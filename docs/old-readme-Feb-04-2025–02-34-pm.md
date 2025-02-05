@@ -22,7 +22,7 @@ Export required variables from 1Password:
 # exporting them into the current shell env, from storage in a password manager (1password in this case)
 # For more info on how ssh keys are used in this project, see ./docs/GUIDE-SSH-KEY-SETUP.md
 # General: DO token, & name to give server
-export DIGITALOCEAN_ACCESS_TOKEN=$(op item get "2025 Feb 020325 Debian project" --fields label=DIGITAL_OCEAN_TOKEN) &&
+export DIGITAL_OCEAN_TOKEN=$(op item get "2025 Feb 020325 Debian project" --fields label=DIGITAL_OCEAN_TOKEN) &&
 export TF_VAR_LINUX_SERVER_NAME=$(op item get "2025 Feb 020325 Debian project" --fields label=LINUX_SERVER_NAME) &&
 # Human user secrets: ssh pub key, ssh user, ssh pw
 export TF_VAR_LINUX_HUMAN_SSH_KEY_PUB_WITHPASS=$(op item get "2025 Feb 020325 Debian project" --fields label=id_ed25519_withpass_DO_TF_HUMAN_PUB_SSH_KEY) &&

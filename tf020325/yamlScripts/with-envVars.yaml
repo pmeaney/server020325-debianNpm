@@ -10,7 +10,9 @@ users:
     primary_group: ${LINUX_USERNAME_DEVOPS_HUMAN}
     sudo: ALL=(ALL) NOPASSWD:ALL
     groups: users, admin, docker
-    lock_passwd: false
+    lock_passwd: true
+    # removing pw for ssh login-- setting lock_passwd to true
+    # lock_passwd: false
     ssh_authorized_keys:
       - ${LINUX_HUMAN_SSH_KEY_PUB_WITHPASS}
 
@@ -24,13 +26,15 @@ users:
     ssh_authorized_keys:
       - ${LINUX_GHACICD_BOT_SSH_KEY_PUB_NOPASS}
 
+# removing pw for ssh login--
+# commenting out chpasswd section since the human ssh key won't be using password authentication
 # This creates our initial user
-chpasswd:
-  expire: false
-  users:
-    - name: ${LINUX_USERNAME_DEVOPS_HUMAN}
-      password: ${LINUX_USERPASSWORD_DEVOPS_HUMAN}
-      type: text
+# chpasswd:
+#   expire: false
+#   users:
+#     - name: ${LINUX_USERNAME_DEVOPS_HUMAN}
+#       password: ${LINUX_USERPASSWORD_DEVOPS_HUMAN}
+#       type: text
 
 package_update: true
 package_upgrade: true
