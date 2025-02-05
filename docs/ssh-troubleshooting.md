@@ -61,15 +61,15 @@ ssh-keygen -t ed25519 -C "your.email@example.com" -f ~/.ssh/id_ed25519_gh_do_hum
 When sshing in, we have two options for specifying which key to use.
 
 Simplest approach - specify the key
-`ssh -i /path/to/your/private_key username@server_ip`
+`ssh username@server_ip`
 
-Better approach - configure SSH config file.
-Once your user
+Better approach - configure SSH config file to use an alias for convenience
 
 `nano ~/.ssh/config`
+
 Add this to your SSH config (replace ${LINUX_HUMAN_USERNAME} with your user's username):
 
-For example, let's go with "deb" short for debian. The actual servername on DO is "server020525-debianNpm". but "ssh deb" is all we'll need to run in the CLI.
+For example, let's go with "deb" short for debian. The actual servername on DO is "server020525-debianNpm". but "ssh deb" is all that we'll need to run in the CLI.
 
 ```bash
 Host your-server-nickname
@@ -97,6 +97,7 @@ Host *
 
 #########
 # So I might use this-- (add the IP after tf generates the server)
+# where User ("patDevOpsUser") is the ssh user you'd typically use in the `ssh user@ip` command.
 AddKeysToAgent yes
 UseKeychain yes
 
