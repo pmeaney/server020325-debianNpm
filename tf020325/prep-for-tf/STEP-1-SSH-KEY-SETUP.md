@@ -1,11 +1,45 @@
-# Required env vars
+I'll help clean up and reorganize the readme part. Here's a clearer version:
 
-Here are the Shell environment variables you need to set based on both the Terraform configuration and the cloud-init YAML script.
+# SSH Key Setup for Project
 
-So, run `env` from a shell, and if these are set... you've done it right.
+This script sets up two SSH key pairs:
 
-Note: This is setup for my own usage.
-You'll need to edit some of these items-- mostly the values of the variables at the top.
+1. A developer (human) key for direct access
+2. A CICD bot key for automated deployments
+
+## Key Distribution
+
+The keys will be distributed to:
+
+- Local Laptop: Both private and public keys
+- DigitalOcean: Public keys only
+- GitHub: Public keys only
+- 1Password: Public keys only
+- GitHub Repository Secrets (later): CICD bot's private key (added per repository)
+
+## How It Works
+
+### Server Authentication
+
+- The remote server uses the CICD bot's public key to verify the GitHub Actions bot when it SSHs in to deploy new Docker images
+- The server uses the developer's public key to verify when developers SSH in from their laptops
+
+### CICD Setup
+
+- The CICD bot's private key will be added to GitHub repository secrets later
+- When GitHub Actions runs, it uses this private key to authenticate with the server
+- The server verifies the bot's identity using the corresponding public key
+
+### Note
+
+This is configured for personal use. To use this script, you'll need to modify:
+
+- The email address
+- SSH key names
+- 1Password vault and item details
+- Token field names
+
+The script below handles the key generation and distribution automatically.
 
 ```bash
 export EMAIL=patrick.wm.meaney@gmail.com
@@ -66,73 +100,4 @@ doctl compute ssh-key create "${SSH_KEY_NAME_HUMAN_NOPASS}" --public-key "$(cat 
 
 # We have the SSH keys on the Laptop (Priv, Pub), DO (Pub), GH (Pub), & 1P (Pub).  And later, GH ([Priv, in Repo Secrets] & Pub)
 # Don't worry about adding the priv key to GH-- itll be done on a repo by repo basis
-# Let's set up the rest of the shell env vars.
-
-# 1PASSWORD
-export DIGITALOCEAN_ACCESS_TOKEN=$(op item get ${ITEM_1P} --fields label=DIGITALOCEAN_ACCESS_TOKEN)
-export TF_VAR_LINUX_SERVER_NAME=$(op item get ${ITEM_1P} --fields label=LINUX_SERVER_NAME)
-export TF_VAR_LINUX_USERNAME_DEVOPS_HUMAN=$(op item get ${ITEM_1P} --fields label=LINUX_USERNAME_DEVOPS_HUMAN)
-export TF_VAR_LINUX_HUMAN_SSH_KEY_PUB_NOPASS=$(op item get ${ITEM_1P} --fields label=id_ed25519_nopass_DO_TF_HUMAN_PUB_SSH_KEY)
-export TF_VAR_LINUX_USERNAME_GHA_CICD_BOT=$(op item get ${ITEM_1P} --fields label=LINUX_USERNAME_GHA_CICD_BOT)
-export TF_VAR_LINUX_GHACICD_BOT_SSH_KEY_PUB_NOPASS=$(op item get ${ITEM_1P} --fields label=id_ed25519_nopass_GHACICD_BOT_PUB_SSH_KEY)
-export TF_VAR_VAULT_1P=$(op item get "2025 Feb 020325 Debian project" --fields label=VAULT_1P)
-export TF_VAR_ITEM_1P=$(op item get "2025 Feb 020325 Debian project" --fields label=ITEM_1P)
-
-```
-
-```bash
-# Descriptions
-
-# To interact with DO, TF expects an env var of "DIGITALOCEAN_ACCESS_TOKEN" exactly.  So, storing it in 1pass with that name as well is a good idea for clarity
-DIGITALOCEAN_ACCESS_TOKEN=
-TF_VAR_LINUX_SERVER_NAME
-
-# TF uses these to setup ssh access for human & cicd nopass ssh login access
-TF_VAR_LINUX_USERNAME_DEVOPS_HUMAN
-TF_VAR_LINUX_HUMAN_SSH_KEY_PUB_NOPASS
-TF_VAR_LINUX_USERNAME_GHA_CICD_BOT
-TF_VAR_LINUX_GHACICD_BOT_SSH_KEY_PUB_NOPASS
-
-# We export these so TF can access them, in order to upload IP address from its output, to this vault & item, into "LINUX_SERVER_IPADDRESS" field
-TF_VAR_VAULT_1P
-TF_VAR_ITEM_1P
-
-```
-
----
-
----
-
----
-
----
-
----
-
----
-
----
-
-To return to fix or add in--------------
-
-```bash
-#
-#       VERIFY
-#
-
-export DIGITALOCEAN_ACCESS_TOKEN=$(op item get "2025 Feb 020325 Debian project" --fields label=DIGITALOCEAN_ACCESS_TOKEN) &&
-export TF_VAR_LINUX_SERVER_NAME=$(op item get "2025 Feb 020325 Debian project" --fields label=LINUX_SERVER_NAME) &&
-# Human user secrets: ssh pub key, ssh user, ssh pw
-export TF_VAR_LINUX_HUMAN_SSH_KEY_PUB_NOPASS=$(op item get "2025 Feb 020325 Debian project" --fields label=id_ed25519_withpass_DO_TF_HUMAN_PUB_SSH_KEY) &&
-export TF_VAR_LINUX_USERNAME_DEVOPS_HUMAN=$(op item get "2025 Feb 020325 Debian project" --fields label=LINUX_USERNAME_DEVOPS_HUMAN) &&
-export TF_VAR_LINUX_USERPASSWORD_DEVOPS_HUMAN=$(op item get "2025 Feb 020325 Debian project" --fields label=LINUX_USERPASSWORD_DEVOPS_HUMAN) &&
-
-# CICD bot user secrets: ssh pub key, ssh user, (no ssh pw for bot user)
-export TF_VAR_LINUX_GHACICD_BOT_SSH_KEY_PUB_NOPASS=$(op item get "2025 Feb 020325 Debian project" --fields label=id_ed25519_nopass_GHACICD_BOT_PUB_SSH_KEY) &&
-export TF_VAR_LINUX_USERNAME_GHA_CICD_BOT=$(op item get "2025 Feb 020325 Debian project" --fields label=LINUX_USERNAME_GHA_CICD_BOT) &&
-
-# We export these so TF can access them, in order to upload IP address for us ("LINUX_SERVER_IPADDRESS")
-export TF_VAR_VAULT_1P=$(op item get "2025 Feb 020325 Debian project" --fields label=VAULT_1P) &&
-export TF_VAR_ITEM_1P=$(op item get "2025 Feb 020325 Debian project" --fields label=ITEM_1P)
-
 ```
