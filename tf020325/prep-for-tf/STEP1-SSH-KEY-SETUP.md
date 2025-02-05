@@ -1,5 +1,3 @@
-I'll help clean up and reorganize the readme part. Here's a clearer version:
-
 # SSH Key Setup for Project
 
 This script sets up two SSH key pairs:
@@ -43,7 +41,7 @@ The script below handles the key generation and distribution automatically.
 
 ```bash
 export EMAIL=patrick.wm.meaney@gmail.com
-export SSH_KEY_NAME_HUMAN_NOPASS=nopass_DO_TF_HUMAN_PUB_SSH_KEY
+export SSH_KEY_NAME_HUMAN_WITHPASS=withpass_DO_TF_HUMAN_PUB_SSH_KEY
 export SSH_KEY_NAME_CICDBOT_NOPASS=nopass_GHACICD_BOT_PUB_SSH_KEY
 
 # 1PASSWORD
@@ -53,13 +51,13 @@ export FIELD_1P_DO_TOKEN=DO_TOKEN_ALL_PERMISSIONS_020325
 export FIELD_1P_GH_TOKEN=GH_PAT_repo_read-org_admin-publickey
 
 # Generate the keys
-ssh-keygen -t ed25519 -C "${EMAIL}" -f ~/.ssh/id_ed25519_${SSH_KEY_NAME_HUMAN_NOPASS} -N ""
+ssh-keygen -t ed25519 -C "${EMAIL}" -f ~/.ssh/id_ed25519_${SSH_KEY_NAME_HUMAN_WITHPASS} -N ""
 ssh-keygen -t ed25519 -C "${EMAIL}" -f ~/.ssh/id_ed25519_${SSH_KEY_NAME_CICDBOT_NOPASS} -N ""
 # Add them to ssh agent (priv key filepath)
-ssh-add ~/.ssh/id_ed25519_${SSH_KEY_NAME_HUMAN_NOPASS}
+ssh-add ~/.ssh/id_ed25519_${SSH_KEY_NAME_HUMAN_WITHPASS}
 ssh-add ~/.ssh/id_ed25519_${SSH_KEY_NAME_CICDBOT_NOPASS}
 
-# Add them to ssh-config file
+# Add them to ssh-config file.  Since its our laptop, we only need to specify our human user's ssh key.
 cat << EOF >> ~/.ssh/config
 
 # New key -- from shell script -- for human dev user
@@ -67,20 +65,14 @@ Host github.com-humanuser
     HostName ssh.github.com
     User git
     Port 443
-    IdentityFile ~/.ssh/id_ed25519_${SSH_KEY_NAME_HUMAN_NOPASS}
-# New key -- from shell script -- for cicd bot
-Host github.com-cicdbot
-    HostName ssh.github.com
-    User git
-    Port 443
-    IdentityFile ~/.ssh/id_ed25519_${SSH_KEY_NAME_CICDBOT_NOPASS}
+    IdentityFile ~/.ssh/id_ed25519_${SSH_KEY_NAME_HUMAN_WITHPASS}
 
 EOF
 
 # Add the 2 ssh pub keys to 1password
 op item edit "$ITEM_1P" --vault "$VAULT_1P" \
        "id_ed25519_nopass_GHACICD_BOT_PUB_SSH_KEY[text]=$(cat ~/.ssh/id_ed25519_nopass_GHACICD_BOT_PUB_SSH_KEY.pub)" \
-       "id_ed25519_nopass_DO_TF_HUMAN_PUB_SSH_KEY[text]=$(cat ~/.ssh/id_ed25519_nopass_DO_TF_HUMAN_PUB_SSH_KEY.pub)"
+       "id_ed25519_withpass_DO_TF_HUMAN_PUB_SSH_KEY[text]=$(cat ~/.ssh/id_ed25519_withpass_DO_TF_HUMAN_PUB_SSH_KEY.pub)"
 
 # cmd to output GH Token
 # op item get "${ITEM_1P}" --vault "${VAULT_1P}" --field "${FIELD_1P_GH_TOKEN}"
@@ -90,13 +82,13 @@ op item edit "$ITEM_1P" --vault "$VAULT_1P" \
 
 # Log into GH with token (so we can auto-upload the 2 ssh keys to GH)
 echo "$(op item get "${ITEM_1P}" --vault "${VAULT_1P}" --field "${FIELD_1P_GH_TOKEN}")" | gh auth login --with-token
-gh ssh-key add ~/.ssh/id_ed25519_${SSH_KEY_NAME_HUMAN_NOPASS}.pub -t "${SSH_KEY_NAME_HUMAN_NOPASS}"
+gh ssh-key add ~/.ssh/id_ed25519_${SSH_KEY_NAME_HUMAN_WITHPASS}.pub -t "${SSH_KEY_NAME_HUMAN_WITHPASS}"
 gh ssh-key add ~/.ssh/id_ed25519_${SSH_KEY_NAME_CICDBOT_NOPASS}.pub -t "${SSH_KEY_NAME_CICDBOT_NOPASS}"
 
 # Log into DO with token (so we can auto-upload the 2 ssh keys to DO)
 doctl auth init --context default --access-token "$(op item get "${ITEM_1P}" --vault "${VAULT_1P}" --field "${FIELD_1P_DO_TOKEN}")"
 doctl compute ssh-key create "${SSH_KEY_NAME_CICDBOT_NOPASS}" --public-key "$(cat ~/.ssh/id_ed25519_${SSH_KEY_NAME_CICDBOT_NOPASS}.pub)"
-doctl compute ssh-key create "${SSH_KEY_NAME_HUMAN_NOPASS}" --public-key "$(cat ~/.ssh/id_ed25519_${SSH_KEY_NAME_HUMAN_NOPASS}.pub)"
+doctl compute ssh-key create "${SSH_KEY_NAME_HUMAN_WITHPASS}" --public-key "$(cat ~/.ssh/id_ed25519_${SSH_KEY_NAME_HUMAN_WITHPASS}.pub)"
 
 ### Now that our 2 SSH keys are on both DO, GH, and 1Password,
 # We can run our terraform commands, which puts both public keys onto the remote server it builds.

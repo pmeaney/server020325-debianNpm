@@ -10,11 +10,9 @@ users:
     primary_group: ${LINUX_USERNAME_DEVOPS_HUMAN}
     sudo: ALL=(ALL) NOPASSWD:ALL
     groups: users, admin, docker
-    lock_passwd: true
-    # removing pw for ssh login-- setting lock_passwd to true
-    # lock_passwd: false
+    lock_passwd: false
     ssh_authorized_keys:
-      - ${LINUX_HUMAN_SSH_KEY_PUB_NOPASS}
+      - ${LINUX_HUMAN_SSH_KEY_PUB_WITHPASS}
 
   - name: ${LINUX_USERNAME_GHA_CICD_BOT}
     gecos: GitHub Actions CI/CD Bot - ${LINUX_USERNAME_GHA_CICD_BOT}
@@ -27,15 +25,13 @@ users:
     ssh_authorized_keys:
       - ${LINUX_GHACICD_BOT_SSH_KEY_PUB_NOPASS}
 
-# removing pw for ssh login--
-# commenting out chpasswd section since the human ssh key won't be using password authentication
 # This creates our initial user
-# chpasswd:
-#   expire: false
-#   users:
-#     - name: ${LINUX_USERNAME_DEVOPS_HUMAN}
-#       password: ${LINUX_USERPASSWORD_DEVOPS_HUMAN}
-#       type: text
+chpasswd:
+  expire: false
+  users:
+    - name: ${LINUX_USERNAME_DEVOPS_HUMAN}
+      password: ${LINUX_USERPASSWORD_DEVOPS_HUMAN}
+      type: text
 
 package_update: true
 package_upgrade: true
@@ -54,3 +50,7 @@ runcmd:
   - sudo usermod -aG docker ${LINUX_USERNAME_DEVOPS_HUMAN}
   # Install rsync with error handling
   - sudo apt-get install -y rsync || echo "Failed to install rsync"
+  # Add explicit SSH checks and restart
+  - sudo systemctl enable ssh
+  - sudo systemctl start ssh
+  - sudo systemctl status ssh
