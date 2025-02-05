@@ -92,15 +92,23 @@ Host *
     IdentityFile ~/.ssh/special_key
 
 #########
-# So I might use this-- (I'll update your-server-ip once tf generates the server)
+# So I might use this-- (add the IP after tf generates the server)
+AddKeysToAgent yes
+UseKeychain yes
+
 Host deb
-    HostName your-server-ip
     User patDevOpsUser
+    Hostname <ServerIPHere>
     IdentityFile ~/.ssh/id_ed25519_gh_do_humanuser_020525
 
-# Default for everything else
 Host *
     IdentityFile ~/.ssh/id_ed25519_gh_do_humanuser_020525
+########################
 
+#### At the minimum, you'd want this:
+Host *
+    AddKeysToAgent yes
+    UseKeychain yes
+    IdentityFile ~/.ssh/id_ed25519_gh_do_humanuser_020525
 
 ```

@@ -12,6 +12,8 @@ So, these are the items we'll have in 1pass:
 `LINUX_CICDGHA_USERNAME` - username for CICD Runner's ssh login session
 `LINUX_CICDGHA_SSHKEY` - public ssh key for CICD Runner. Eventually we'll add the corresponding private key to a github repo so the CICD Runner can login.
 `LINUX_SERVER_NAME` - name it whatever you'd want to see in the DigitalOcean Droplets Dashboard
+`VAULT_1P` - add the vaultname. This is used by TF to access 1pass CLI when it uploads server IP to 1pass
+`VAULT_1P` - add the vaultname. This is used by TF to access 1pass CLI when it uploads server IP to 1pass
 `LINUX_SERVER_IPADDRESS` - leave empty (TF will run a 1pass CLI command to update it with our servers IP address)
 
 Additionally:
@@ -50,6 +52,8 @@ export TF_VAR_LINUX_HUMAN_USERPASS=i-like-using-1pass-pw-generator
 export TF_VAR_LINUX_CICDGHA_USERNAME=ghaCICDUser
 export TF_VAR_LINUX_CICDGHA_SSHKEY=publicSshKey-for-cicd-bot-of-github-actions
 export TF_VAR_LINUX_SERVER_NAME=serverName-shown-in-DO-dashboard
+export TF_VAR_VAULT_1P=some1passVaultName
+export TF_VAR_ITEM_1P=some1passItemName
 
 So, all those items will need to be set up in a Vault & an Item ("Secure Note"). I usually set up all as text, except for passwords & tokens.
 
@@ -68,4 +72,6 @@ export TF_VAR_LINUX_HUMAN_USERPASS=$(op item get ${ITEM_1P} --fields label=LINUX
 export TF_VAR_LINUX_CICDGHA_USERNAME=$(op item get ${ITEM_1P} --fields label=LINUX_CICDGHA_USERNAME)
 export TF_VAR_LINUX_CICDGHA_SSHKEY=$(op item get ${ITEM_1P} --fields label=LINUX_CICDGHA_SSHKEY)
 export TF_VAR_LINUX_SERVER_NAME=$(op item get ${ITEM_1P} --fields label=LINUX_SERVER_NAME)
+export TF_VAR_VAULT_1P=$(op item get ${ITEM_1P} --fields label=VAULT_1P)
+export TF_VAR_ITEM_1P=$(op item get ${ITEM_1P} --fields label=ITEM_1P)
 ```
