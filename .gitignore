@@ -9,3 +9,6 @@ terraform.tfstate.*
 .terraform/
 
 **/.DS_Store
+
+
+/unshareddocs/

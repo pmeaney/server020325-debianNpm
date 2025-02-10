@@ -55,3 +55,46 @@ On the SSL Certificate Tab of "New Proxy Host",
 - switch "I agree to the Lets Encrypt Terms of Service" to on.
 - Click save.
 - If it fails, try again.
+
+OR
+
+If you want to automate it...
+use NPM's API
+
+```bash
+curl -X POST "http://npm-instance:81/api/tokens" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "identity": "admin@example.com",
+    "secret": "changeme"
+  }'
+
+
+
+Below,
+"force_ssl": true should trigger both SSL cert generation and HTTP to HTTPS redirection
+
+# 2. Create proxy host (& request SSl cert for it)
+curl -X POST "http://npm-instance:81/api/nginx/proxy-hosts" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "domain_names": ["cms.myDomainName.com"],
+    "forward_scheme": "http",
+    "forward_host": "172.17.0.1",
+    "forward_port": 3000,
+    "block_exploits": true,
+    "certificate_id": null,
+    "force_ssl": true,
+    "meta": {
+      "letsencrypt_agree": true,
+      "dns_challenge": false
+    },
+    "advanced_config": "",
+    "locations": [],
+    "allow_websocket_upgrade": true,
+    "http2_support": false,
+    "enabled": true
+}'
+
+```
