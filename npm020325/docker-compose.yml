@@ -28,7 +28,7 @@ services:
       - main-network--npm020325
 
   postgres-for-nginx-proxy-mgr-020325:
-    image: postgres:latest
+    image: postgres:17
     container_name: postgres-for-nginx-proxy-mgr-020325
     environment:
       POSTGRES_USER: "npm"

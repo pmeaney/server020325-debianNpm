@@ -1,5 +1,10 @@
 ### Nginx Proxy Manager
 
+- Access NPM admin panel at `http://<server-ip>:81`
+  - Default credentials:
+    - Username: admin@example.com
+    - Password: changeme
+
 Copied from here-- the npm & postgres services
 https://nginxproxymanager.com/setup/
 
@@ -11,11 +16,6 @@ cd nginx-proxy-mgr-jan2025 && \
 docker compose -vvv -f docker-compose.yml up --build --remove-orphans -d && \
 docker compose logs -f nginx-proxy-mgr-020325
 ```
-
-- Access NPM admin panel at `http://<server-ip>:81`
-  - Default credentials:
-    - Username: admin@example.com
-    - Password: changeme
 
 ## Creating Proxy Hosts
 
