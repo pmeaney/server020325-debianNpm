@@ -68,13 +68,23 @@ curl -X POST "http://npm-instance:81/api/tokens" \
     "identity": "admin@example.com",
     "secret": "changeme"
   }'
-
-
+```
 
 Below,
 "force_ssl": true should trigger both SSL cert generation and HTTP to HTTPS redirection
+...
+
+nah looks like maybe its "forced_ssl" -- see npm schema json example:
+https://github.com/NginxProxyManager/nginx-proxy-manager/blob/develop/backend/schema/common.json#L9
+
+... nope... that doesnt seem to work either.
+
+additonal example(s):
+https://www.reddit.com/r/nginxproxymanager/comments/va0hjb/rest_api/?rdt=64435
 
 # 2. Create proxy host (& request SSl cert for it)
+
+```bash
 curl -X POST "http://npm-instance:81/api/nginx/proxy-hosts" \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -H "Content-Type: application/json" \
